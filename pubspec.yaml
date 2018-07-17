@@ -1,0 +1,16 @@
+name: gurps_dart
+description: Common code for most GURPS utilities
+author: M. Jeff Wilson <geek.macbeer@gmail.com>
+homepage: http://hypermediocrity.us
+version: 0.0.1
+
+dev_dependencies:
+  test: ^0.12.3
+  build_runner: ^0.9.0
+  build_web_compilers: ^0.4.0
+  build_test: ^0.10.2
+
+dependency_overrides:
+
+environment:
+  sdk: '>=2.0.0-dev.68.0 <2.0.0'
