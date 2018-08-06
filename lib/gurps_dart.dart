@@ -1,8 +1,3 @@
-/// Support for doing something awesome.
-///
-/// More dartdocs go here.
-library gurps_dart;
-
 export 'src/die_roll.dart';
 export 'src/trait_modifier.dart';
 export 'src/units/gurps_distance.dart';
