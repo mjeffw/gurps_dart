@@ -12,3 +12,7 @@ doc/api/
 
 # IDEA files
 .idea/
+
+# coverage files
+test/.test_coverage.dart
+coverage/

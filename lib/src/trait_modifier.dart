@@ -37,13 +37,19 @@ class TraitModifier {
 
 /// Represents a list of GURPS Modifiers, which can be either Enhancements or Limitations.
 ///
-/// Provides some convenience methods for getting the sum of all Enhancement and Limitation values, or adjusting a
-/// value
+/// Provides some convenience methods for getting the sum of all Enhancement and Limitation values, or adjusting a value
 class TraitModifierList extends DelegatingList<TraitModifier> {
   TraitModifierList() : super(new List<TraitModifier>());
 
+  /// Determine the sum of all levels of the elements expressed as a percentage, multiplied by the baseValue, and return
+  /// the smallest integer equal to or greater than the result. For example, if the sum of levels = 42 and base value is
+  /// 20, then the value is 0.42 x 20 = 8.4, so we'd return 9.
   int adjustment(int baseValue) {
+    // convert each TraitModifier into its int level value, then divide that by 100 (thus converting it to a percentage,
+    // and sum them.
     double x = this.map((i) => i.level / 100.0).fold(0.0, (a, b) => a + b);
+
+    // return the sum multipled by the baseValue, truncating any fractions
     return (baseValue * x).ceil();
   }
 
@@ -60,8 +66,7 @@ abstract class TraitModifiable {
     _modifiers.add(t);
   }
 
-  int adjustmentForTraitModifiers(int baseValue) =>
-      _modifiers.adjustment(baseValue);
+  int adjustmentForTraitModifiers(int baseValue) => _modifiers.adjustment(baseValue);
 
   int get sumOfTraitModifierLevels => _modifiers.sum;
 
