@@ -6,6 +6,6 @@ String toSignedString(int x) {
   }
 }
 
-bool isNotAFraction(int numerator, int denominator) {
+bool isWholeNumber(int numerator, int denominator) {
   return numerator % denominator == 0;
 }

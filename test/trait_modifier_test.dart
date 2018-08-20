@@ -18,7 +18,8 @@ void main() {
     test('has typical text', () {
       expect(t.typicalText, equals('name, detail, +10%'));
 
-      expect(TraitModifier('name2', null, -25).typicalText, equals('name2, -25%'));
+      expect(
+          TraitModifier('name2', null, -25).typicalText, equals('name2, -25%'));
     });
   });
 
@@ -42,7 +43,8 @@ void main() {
     });
 
     test('sum should equal sum of all element levels', () {
-      emptyList.addAll([TraitModifier('a', null, -15), TraitModifier('b', null, -25)]);
+      emptyList.addAll(
+          [TraitModifier('a', null, -15), TraitModifier('b', null, -25)]);
       expect(emptyList.sum, equals(-40));
       expect(filledList.sum, equals(10));
     });
@@ -67,7 +69,7 @@ void main() {
       expect(foo.asTraitModifiable() is TraitModifiable, equals(true));
     });
 
-    test('can add TraitModifiers', (){
+    test('can add TraitModifiers', () {
       var z = TraitModifier('z', null, 25);
       var y = TraitModifier('y', null, -12);
 

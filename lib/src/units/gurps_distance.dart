@@ -13,11 +13,11 @@ class GurpsDistance {
   static String toFormattedString(int yards, {bool showFraction: true}) {
     if (yards >= yardsPerMile) {
       if (showFraction) {
-        return (isNotAFraction(yards, GurpsDistance.yardsPerMile))
+        return (isWholeNumber(yards, GurpsDistance.yardsPerMile))
             ? '${yards ~/ yardsPerMile} miles'
             : '${yards / yardsPerMile} miles';
       } else {
-        return '${yards ~/ yardsPerMile} miles${isNotAFraction(yards, GurpsDistance.yardsPerMile) ? "" : " ${yards % yardsPerMile} yards"}';
+        return '${yards ~/ yardsPerMile} miles${isWholeNumber(yards, GurpsDistance.yardsPerMile) ? "" : " ${yards % yardsPerMile} yards"}';
       }
     } else {
       return '${yards} yards';
