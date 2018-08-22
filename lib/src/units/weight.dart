@@ -11,7 +11,7 @@ class Weight {
   int get inPounds => _value;
 
   static String toFormattedString(int pounds) {
-    if (pounds > poundsPerTon) {
+    if (pounds >= poundsPerTon) {
       num total = pounds / poundsPerTon;
       if (pounds % poundsPerTon == 0) return '${(pounds ~/ poundsPerTon)} tons';
       return '${total} tons';
