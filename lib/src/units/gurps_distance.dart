@@ -1,14 +1,14 @@
 import '../util/core_utils.dart';
 
 class GurpsDistance {
-  static const int yardsPerMile = 2000;
-
-  final int _value;
-
   const GurpsDistance._yards(this._value);
 
   const GurpsDistance({int yards: 0, int miles: 0})
       : this._yards(yardsPerMile * miles + yards);
+
+  static const int yardsPerMile = 2000;
+
+  final int _value;
 
   static String toFormattedString(int yards, {bool showFraction: true}) {
     if (yards >= yardsPerMile) {

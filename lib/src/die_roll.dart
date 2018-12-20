@@ -8,19 +8,18 @@ import 'package:quiver/core.dart';
 /// GURPS die rolls are usually 'normalized' such that the modifier can only be in the range of [-1 to 2], inclusive.
 /// The number of dice is increased or decreased as the modifier moves beyond that range.
 class DieRoll {
-   final int _numberOfDice;
-   final int _adds;
+  DieRoll(int numberOfDice, int adds)
+      : this._numberOfDice = normalize(numberOfDice, adds)[0],
+        this._adds = normalize(numberOfDice, adds)[1];
 
-   DieRoll(int numberOfDice, int adds) :
-     this._numberOfDice = normalize(numberOfDice, adds)[0],
-     this._adds = normalize(numberOfDice, adds)[1];
-
-   factory DieRoll.fromString(String text) {
+  factory DieRoll.fromString(String text) {
     final natural_number = r'\d+'; // all positive integers
-    final signed_integer = r'(?:\+|-)' + natural_number; // either (plus OR minus) plus an integer
+    final signed_integer =
+        r'(?:\+|-)' + natural_number; // either (plus OR minus) plus an integer
 
     // ^(\d+)d((?:\+|-)\d+)?$
-    RegExp e = new RegExp(r'^(' + natural_number + r')d(' + signed_integer + r')?$');
+    RegExp e =
+        new RegExp(r'^(' + natural_number + r')d(' + signed_integer + r')?$');
     Iterable<Match> iter = e.allMatches(text);
 
     if (iter.isNotEmpty) {
@@ -34,6 +33,9 @@ class DieRoll {
     }
     return null;
   }
+
+  final int _numberOfDice;
+  final int _adds;
 
   /// Return the equivalent add value if dice is converted to use (base)d as its base.
   ///
@@ -73,7 +75,10 @@ class DieRoll {
   /// (N)d(+7) == (N+2)d(-1) -- 5d+7 == 7d-1
   static List<int> normalize(int numberOfDice, int adds) {
     if (adds > 2) {
-      return [((numberOfDice + (adds + 1) / 4).floor()), (((adds + 1) % 4) - 1)];
+      return [
+        ((numberOfDice + (adds + 1) / 4).floor()),
+        (((adds + 1) % 4) - 1)
+      ];
     } else if (adds < -1 && numberOfDice > 1) {
       return normalize(numberOfDice - 1, adds + 4);
     }
@@ -84,20 +89,24 @@ class DieRoll {
 
   int get numberOfDice => _numberOfDice;
 
-  DieRoll operator +(int adds) => DieRoll(this._numberOfDice, this._adds + adds);
+  DieRoll operator +(int adds) =>
+      DieRoll(this._numberOfDice, this._adds + adds);
 
-  DieRoll operator -(int adds) => DieRoll(this._numberOfDice, this._adds - adds);
+  DieRoll operator -(int adds) =>
+      DieRoll(this._numberOfDice, this._adds - adds);
 
-  DieRoll operator *(int factor) => DieRoll(0, DieRoll.denormalize(this, 0) * factor);
+  DieRoll operator *(int factor) =>
+      DieRoll(0, DieRoll.denormalize(this, 0) * factor);
 
-  DieRoll operator /(int divisor) => DieRoll(0, (DieRoll.denormalize(this, 0) / divisor).floor());
+  DieRoll operator /(int divisor) =>
+      DieRoll(0, (DieRoll.denormalize(this, 0) / divisor).floor());
 
   @override
   String toString() {
     if (_adds == 0) {
       return "${_numberOfDice}d";
     }
-    
+
     String sign = "";
     if (!_adds.isNegative) {
       sign = "+";
@@ -106,7 +115,8 @@ class DieRoll {
   }
 
   @override
-  bool operator ==(Object o) => o is DieRoll && o._numberOfDice == _numberOfDice && o._adds == _adds;
+  bool operator ==(Object o) =>
+      o is DieRoll && o._numberOfDice == _numberOfDice && o._adds == _adds;
 
   @override
   int get hashCode => hash2(_adds.hashCode, _numberOfDice.hashCode);

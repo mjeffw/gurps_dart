@@ -16,3 +16,4 @@ doc/api/
 # coverage files
 test/.test_coverage.dart
 coverage/
+.DS_Store

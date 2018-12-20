@@ -1,10 +1,14 @@
 {
     "modifiers": [
         {
-            "name": "Accurate"
+            "name": "Accurate",
+            "percentage": 5,
+            "isAttack": true,
+            "hasLevels": true
         },
         {
-            "name": "Affects Insubstantial"
+            "name": "Affects Insubstantial",
+            "percentage": 20
         }
     ]
 }

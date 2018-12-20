@@ -1,13 +1,4 @@
 class GurpsDuration {
-  static const int secondsPerYear = Duration.secondsPerDay * 365;
-  static const int secondsPerMonth = 2628000;
-  static const int secondsPerWeek = Duration.secondsPerDay * 7;
-  static const int secondsPerDay = Duration.secondsPerDay;
-  static const int secondsPerHour = Duration.secondsPerHour;
-  static const int secondsPerMinute = Duration.secondsPerMinute;
-
-  final int _duration;
-
   const GurpsDuration(
       {int years: 0,
       int months: 0,
@@ -25,6 +16,15 @@ class GurpsDuration {
             seconds);
 
   const GurpsDuration._seconds(this._duration);
+
+  static const int secondsPerYear = Duration.secondsPerDay * 365;
+  static const int secondsPerMonth = 2628000;
+  static const int secondsPerWeek = Duration.secondsPerDay * 7;
+  static const int secondsPerDay = Duration.secondsPerDay;
+  static const int secondsPerHour = Duration.secondsPerHour;
+  static const int secondsPerMinute = Duration.secondsPerMinute;
+
+  final int _duration;
 
   int get inSeconds => _duration;
 

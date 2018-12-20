@@ -1,18 +1,37 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:json_annotation/json_annotation.dart';
+import 'dart:io';
+import 'dart:convert';
 
 part 'modifier.g.dart';
 
 @JsonSerializable()
 class Modifier {
-  Modifier({this.name});
+  Modifier({this.name, this.percentage, this.isAttack, this.hasLevels});
 
   factory Modifier.fromJson(Map<String, dynamic> json) =>
       _$ModifierFromJson(json);
 
+  @JsonKey(nullable: false, required: true)
   final String name;
+
+  /// If not leveled, this is the flat value of the modifier. Else, this is the
+  /// percentage cost per level.
+  @JsonKey(nullable: false, required: true)
+  final int percentage;
+
+  @JsonKey(defaultValue: false)
+  final bool isAttack;
+
+  @JsonKey(defaultValue: false)
+  final bool hasLevels;
+
+  int percentageForLevel(int level) {
+    if (!hasLevels) {
+      throw '$name does not have levels';
+    }
+
+    return level * percentage;
+  }
 
   static Map<String, Modifier> _modifiers = {};
 
@@ -27,12 +46,17 @@ class Modifier {
   }
 
   static Future<List<Modifier>> fetchAll() async {
-    String rawJson = await File('assets/data/modifiers.json').readAsString();
     List<Modifier> list = [];
-    final Map<String, dynamic> itemMap = json.decode(rawJson);
-    for (var jsonItem in itemMap['modifiers']) {
-      list.add(Modifier.fromJson(jsonItem as Map<String, dynamic>));
+    Map data = await readModifierData();
+    for (Map<String, dynamic> jsonItem in data['modifiers']) {
+      list.add(Modifier.fromJson(jsonItem));
     }
     return list;
+  }
+
+  static Future<Map> readModifierData() async {
+    return File('assets/data/modifiers.json')
+        .readAsString()
+        .then<Map>((fileContents) => json.decode(fileContents) as Map);
   }
 }
