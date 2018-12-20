@@ -6,7 +6,15 @@ part 'modifier.g.dart';
 
 @JsonSerializable()
 class Modifier {
-  Modifier({this.name, this.percentage, this.isAttack, this.hasLevels});
+  Modifier(
+      {this.name,
+      this.percentage,
+      this.isAttack,
+      this.hasLevels,
+      this.multiplier,
+      this.constant,
+      this.prefix,
+      this.suffix});
 
   factory Modifier.fromJson(Map<String, dynamic> json) =>
       _$ModifierFromJson(json);
@@ -25,12 +33,28 @@ class Modifier {
   @JsonKey(defaultValue: false)
   final bool hasLevels;
 
+  /// Leveled modifiers sometimes need to display text like "2 yards" (for
+  /// level 1), "4 yards" (for level 2), etc. This is generalized to
+  /// "$prefix$levelValue$suffix" where $levelValue is a formula of the
+  /// type ax + b, where x = level.
+
+  final int multiplier;
+  final int constant;
+  final String prefix;
+  final String suffix;
+
   int percentageForLevel(int level) {
     if (!hasLevels) {
       throw '$name does not have levels';
     }
-
     return level * percentage;
+  }
+
+  String textForLevel(int level) {
+    if (!hasLevels) {
+      throw '$name does not have levels';
+    }
+    return '$prefix${level * multiplier + constant}$suffix';
   }
 
   static Map<String, Modifier> _modifiers = {};

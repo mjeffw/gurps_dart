@@ -4,11 +4,19 @@
             "name": "Accurate",
             "percentage": 5,
             "isAttack": true,
-            "hasLevels": true
+            "hasLevels": true,
+            "prefix": "+",
+            "suffix": "",
+            "multiplier": 1,
+            "constant": 0
         },
         {
             "name": "Affects Insubstantial",
             "percentage": 20
+        },
+        {
+            "name": "Affects Substantial",
+            "percentage": 40
         }
     ]
 }
