@@ -1,5 +1,6 @@
-import "../lib/src/die_roll.dart";
 import "package:test/test.dart";
+
+import "../lib/src/die_roll.dart";
 
 void main() {
   test("can be constructed from a String", () {

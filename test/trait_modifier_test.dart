@@ -1,4 +1,5 @@
 import "package:test/test.dart";
+
 import '../lib/src/trait_modifier.dart';
 
 void main() {

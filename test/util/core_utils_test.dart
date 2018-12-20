@@ -1,4 +1,5 @@
 import "package:test/test.dart";
+
 import '../../lib/src/util/core_utils.dart';
 
 void main() {

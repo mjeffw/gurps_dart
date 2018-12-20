@@ -1,4 +1,5 @@
 import "package:test/test.dart";
+
 import '../../lib/src/util/repeating_sequence.dart';
 
 void main() {

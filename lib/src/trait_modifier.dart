@@ -1,6 +1,6 @@
-import 'util/core_utils.dart';
-
 import 'package:collection/collection.dart';
+
+import 'util/core_utils.dart';
 
 typedef bool TraitModifierPredicate(TraitModifier e);
 
