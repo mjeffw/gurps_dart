@@ -5,10 +5,9 @@
             "percentage": 5,
             "isAttack": true,
             "hasLevels": true,
-            "prefix": "+",
-            "suffix": "",
-            "multiplier": 1,
-            "constant": 0
+            "levelTextExpression": "x",
+            "levelTextPrefix": "+",
+            "levelTextSuffix": ""
         },
         {
             "name": "Affects Insubstantial",
@@ -17,6 +16,15 @@
         {
             "name": "Affects Substantial",
             "percentage": 40
+        },
+        {
+            "name": "Area Effect",
+            "percentage": 50,
+            "isAttack": true,
+            "hasLevels": true,
+            "levelTextPrefix": "",
+            "levelTextSuffix": " yards",
+            "levelTextExpression": "2^x"
         }
     ]
 }

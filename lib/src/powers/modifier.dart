@@ -1,6 +1,8 @@
-import 'package:json_annotation/json_annotation.dart';
-import 'dart:io';
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:json_annotation/json_annotation.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 part 'modifier.g.dart';
 
@@ -11,10 +13,10 @@ class Modifier {
       this.percentage,
       this.isAttack,
       this.hasLevels,
-      this.multiplier,
-      this.constant,
-      this.prefix,
-      this.suffix});
+      this.levelTextExpression,
+      this.levelTextPrefix,
+      this.levelTextSuffix})
+      : _exp = _parser.parse(levelTextExpression);
 
   factory Modifier.fromJson(Map<String, dynamic> json) =>
       _$ModifierFromJson(json);
@@ -35,13 +37,26 @@ class Modifier {
 
   /// Leveled modifiers sometimes need to display text like "2 yards" (for
   /// level 1), "4 yards" (for level 2), etc. This is generalized to
-  /// "$prefix$levelValue$suffix" where $levelValue is a formula of the
-  /// type ax + b, where x = level.
+  /// "$prefix $levelValue $suffix" where $levelValue is an equation
 
-  final int multiplier;
-  final int constant;
-  final String prefix;
-  final String suffix;
+  @JsonKey(defaultValue: 'x')
+  final String levelTextExpression;
+
+  @JsonKey(defaultValue: '')
+  final String levelTextPrefix;
+
+  @JsonKey(defaultValue: '')
+  final String levelTextSuffix;
+
+  /// Fields below here are working variables, not persisted.
+  @JsonKey(ignore: true)
+  final Expression _exp;
+
+  @JsonKey(ignore: true)
+  final ContextModel cm = ContextModel();
+
+  @JsonKey(ignore: true)
+  final Variable x = Variable('x');
 
   int percentageForLevel(int level) {
     if (!hasLevels) {
@@ -54,10 +69,15 @@ class Modifier {
     if (!hasLevels) {
       throw '$name does not have levels';
     }
-    return '$prefix${level * multiplier + constant}$suffix';
+
+    cm.bindVariable(x, Number(level));
+    double y = _exp.evaluate(EvaluationType.REAL, cm);
+
+    return '$levelTextPrefix${y.floor()}$levelTextSuffix';
   }
 
   static Map<String, Modifier> _modifiers = {};
+  static Parser _parser = Parser();
 
   static Future<Modifier> fetch(String name) async {
     if (_modifiers.isEmpty) {
