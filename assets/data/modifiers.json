@@ -5,9 +5,7 @@
             "percentage": 5,
             "isAttack": true,
             "hasLevels": true,
-            "levelTextExpression": "x",
-            "levelTextPrefix": "+",
-            "levelTextSuffix": ""
+            "levelTextPrefix": "+"
         },
         {
             "name": "Affects Insubstantial",
@@ -22,9 +20,18 @@
             "percentage": 50,
             "isAttack": true,
             "hasLevels": true,
-            "levelTextPrefix": "",
             "levelTextSuffix": " yards",
             "levelTextExpression": "2^x"
+        },
+        {
+            "name": "Armor Divisor",
+            "percentage": 50,
+            "isAttack": true,
+            "hasLevels": true,
+            "levelTextExprCustom": "INDEXOF[2,3,5,10]",
+            "levelTextPrefix": "(",
+            "levelTextSuffix": ")",
+            "levelRange": "[1,4]"
         }
     ]
 }

@@ -15,7 +15,9 @@ Modifier _$ModifierFromJson(Map<String, dynamic> json) {
       hasLevels: json['hasLevels'] as bool ?? false,
       levelTextExpression: json['levelTextExpression'] as String ?? 'x',
       levelTextPrefix: json['levelTextPrefix'] as String ?? '',
-      levelTextSuffix: json['levelTextSuffix'] as String ?? '');
+      levelTextSuffix: json['levelTextSuffix'] as String ?? '',
+      levelTextExprCustom: json['levelTextExprCustom'] as String ?? '',
+      levelRange: json['levelRange'] as String ?? '[1,4294967296]');
 }
 
 Map<String, dynamic> _$ModifierToJson(Modifier instance) => <String, dynamic>{
@@ -23,7 +25,9 @@ Map<String, dynamic> _$ModifierToJson(Modifier instance) => <String, dynamic>{
       'percentage': instance.percentage,
       'isAttack': instance.isAttack,
       'hasLevels': instance.hasLevels,
+      'levelRange': instance.levelRange,
       'levelTextExpression': instance.levelTextExpression,
       'levelTextPrefix': instance.levelTextPrefix,
-      'levelTextSuffix': instance.levelTextSuffix
+      'levelTextSuffix': instance.levelTextSuffix,
+      'levelTextExprCustom': instance.levelTextExprCustom
     };
