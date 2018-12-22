@@ -94,6 +94,7 @@ void main() {
       expect(area.textForLevel(1), equals("2 yards"));
       expect(area.textForLevel(2), equals("4 yards"));
       expect(area.textForLevel(3), equals("8 yards"));
+      expect(area.textForLevel(4), equals("16 yards"));
     });
     test('Armor Divisor', () {
       expect(armorDivisor.textForLevel(1), equals("(2)"));

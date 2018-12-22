@@ -40,10 +40,13 @@ class Modifier {
   @JsonKey(defaultValue: false)
   final bool hasLevels;
 
+  // The fields below only apply if the Modifier has levels.
+
   /// Leveled modifiers sometimes need to display text like "2 yards" (for
   /// level 1), "4 yards" (for level 2), etc. This is generalized to
   /// "$prefix $levelValue $suffix" where $levelValue is an equation
 
+  /// Allowable range of level.
   @JsonKey(defaultValue: "[1,4294967296]")
   final String levelRange;
 
@@ -56,10 +59,15 @@ class Modifier {
   @JsonKey(defaultValue: '')
   final String levelTextSuffix;
 
+  /// Custom expression string -- if the conversion from a level to text is
+  /// algebraic, use the levelTextExpression, above. This field allows for
+  /// other expressions. Currently supported is INDEXOF[a,b,c,...] which allows
+  /// for mapping the value to a 1-based index. If present, this overrides any
+  /// value in levelTextExpression.
   @JsonKey(defaultValue: '')
   final String levelTextExprCustom;
 
-  /// Fields below here are working variables, not persisted.
+  // Fields below here are working variables, not persisted.
   @JsonKey(ignore: true)
   final Expression _exp;
 
@@ -70,11 +78,11 @@ class Modifier {
   final Variable _x = Variable('x');
 
   int percentageForLevel(int level) {
-    _validLevel(level);
+    _validateLevel(level);
     return level * percentage;
   }
 
-  void _validLevel(int level) {
+  void _validateLevel(int level) {
     if (!hasLevels) {
       throw '$name does not have levels';
     }
@@ -88,9 +96,7 @@ class Modifier {
   }
 
   String textForLevel(int level) {
-    if (!hasLevels) {
-      throw '$name does not have levels';
-    }
+    _validateLevel(level);
 
     String baseValue = _getLevelTextBaseValue(level);
     return '$levelTextPrefix$baseValue$levelTextSuffix';
