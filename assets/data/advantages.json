@@ -1,0 +1,22 @@
+{
+    "advantages": {
+        "360° Vision": {
+            "name": "360° Vision",
+            "cost": 25,
+            "types": [
+                "Physical",
+                "Exotic"
+            ]
+        },
+        "Absolute Timing": {
+            "name": "Absolute Timing",
+            "cost": 2,
+            "enhancements": {
+                "Chronolocation": {
+                    "name": "Chronolocation",
+                    "cost": 5
+                }
+            }
+        }
+    }
+}

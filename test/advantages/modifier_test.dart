@@ -1,4 +1,4 @@
-import 'package:gurps_dart/src/powers/modifier.dart';
+import 'package:gurps_dart/src/advantages/modifier.dart';
 import 'package:test/test.dart';
 
 void main() {
