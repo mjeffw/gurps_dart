@@ -26,9 +26,9 @@ Map<String, dynamic> _$EnhancementToJson(Enhancement instance) {
   return val;
 }
 
-Advantage _$AdvantageFromJson(Map<String, dynamic> json) {
+AdvantageBase _$AdvantageFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const ['name', 'cost']);
-  return Advantage(
+  return AdvantageBase(
       name: json['name'] as String,
       cost: json['cost'] as int,
       enhancements: (json['enhancements'] as Map<String, dynamic>)?.map(
@@ -41,7 +41,8 @@ Advantage _$AdvantageFromJson(Map<String, dynamic> json) {
       types: (json['types'] as List)?.map((e) => e as String)?.toList() ?? []);
 }
 
-Map<String, dynamic> _$AdvantageToJson(Advantage instance) => <String, dynamic>{
+Map<String, dynamic> _$AdvantageToJson(AdvantageBase instance) =>
+    <String, dynamic>{
       'name': instance.name,
       'cost': instance.cost,
       'enhancements': instance.enhancements,

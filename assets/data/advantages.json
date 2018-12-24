@@ -16,7 +16,10 @@
                     "name": "Chronolocation",
                     "cost": 5
                 }
-            }
+            },
+            "types": [
+                "Mental"
+            ]
         }
     }
 }
