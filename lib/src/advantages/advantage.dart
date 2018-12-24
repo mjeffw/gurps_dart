@@ -21,7 +21,7 @@ class Advantage {
   final _Modifiers modifiers = _Modifiers();
 
   int get cost {
-    double result = base.cost.toDouble();
+    double result = base.cost.toDouble() * level;
     var x = modifiers.getPercentageForLevel(level);
     var y = x.toDouble() / 100.0;
     result += result * y;
@@ -29,11 +29,16 @@ class Advantage {
   }
 
   bool get hasLevels => base.hasLevels;
+
   int get level {
     if (hasLevels && _level == null) {
       _level = 1;
     }
     return _level;
+  }
+
+  set level(int newLevel) {
+    _level = newLevel;
   }
 
   static Future<Advantage> build(String name) async {

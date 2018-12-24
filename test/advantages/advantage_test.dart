@@ -57,7 +57,16 @@ void main() {
       expect(adv.cost, equals(10));
       expect(adv.hasLevels, isTrue);
       expect(adv.level, equals(1));
+    });
 
+    test('raising level', () async {
+      Advantage adv = await Advantage.build('Affliction');
+      adv.level = 4;
+      expect(adv.cost, equals(40));
+    });
+
+    test('adding modifier', () async {
+      Advantage adv = await Advantage.build('Affliction');
       Modifier m = await Modifier.build('Accurate');
       adv.modifiers.add(m);
 
@@ -65,6 +74,9 @@ void main() {
 
       m.level = 4;
       expect(adv.cost, equals(12));
+
+      adv.level = 4;
+      expect(adv.cost, equals(48));
     });
   });
 }
