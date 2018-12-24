@@ -9,9 +9,38 @@ part 'modifier.g.dart';
 var indexofExpression = RegExp(r'INDEXOF\[(.*)\]');
 var rangeExpression = RegExp(r'\[(\d+),(\d+)\]');
 
-@JsonSerializable()
 class Modifier {
-  Modifier(
+  Modifier({this.base});
+
+  final ModifierBase base;
+
+  int _level;
+
+  bool get hasLevels => base.hasLevels;
+
+  int get level {
+    if (_level == null && hasLevels) {
+      _level = 1;
+    }
+    return _level;
+  }
+
+  set level(int level) {
+    if (!hasLevels) {
+      throw StateError('cannot set level on ${base.name}');
+    }
+    _level = level;
+  }
+
+  int get percentage {
+    int level = _level ?? 1;
+    return base.percentageForLevel(level);
+  }
+}
+
+@JsonSerializable()
+class ModifierBase {
+  ModifierBase(
       {this.name,
       this.percentage,
       this.isAttack,
@@ -23,7 +52,7 @@ class Modifier {
       this.levelRange})
       : _exp = _parser.parse(levelTextExpression);
 
-  factory Modifier.fromJson(Map<String, dynamic> json) =>
+  factory ModifierBase.fromJson(Map<String, dynamic> json) =>
       _$ModifierFromJson(json);
 
   @JsonKey(nullable: false, required: true)
@@ -119,24 +148,24 @@ class Modifier {
 
   bool _hasCustomLevelExpression() => levelTextExprCustom.length > 0;
 
-  static Map<String, Modifier> _modifiers = {};
+  static Map<String, ModifierBase> _modifiers = {};
   static Parser _parser = Parser();
 
-  static Future<Modifier> fetch(String name) async {
+  static Future<ModifierBase> fetch(String name) async {
     if (_modifiers.isEmpty) {
       var list = await fetchAll();
-      for (Modifier m in list) {
+      for (ModifierBase m in list) {
         _modifiers[m.name] = m;
       }
     }
     return _modifiers[name];
   }
 
-  static Future<List<Modifier>> fetchAll() async {
-    List<Modifier> list = [];
+  static Future<List<ModifierBase>> fetchAll() async {
+    List<ModifierBase> list = [];
     Map data = await readModifierData();
     for (Map<String, dynamic> jsonItem in data['modifiers']) {
-      list.add(Modifier.fromJson(jsonItem));
+      list.add(ModifierBase.fromJson(jsonItem));
     }
     return list;
   }

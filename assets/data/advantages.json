@@ -20,6 +20,15 @@
             "types": [
                 "Mental"
             ]
+        },
+        "Affliction": {
+            "name": "Affliction",
+            "cost": 10,
+            "hasLevels": true,
+            "types": [
+                "Physical",
+                "Exotic"
+            ]
         }
     }
 }
