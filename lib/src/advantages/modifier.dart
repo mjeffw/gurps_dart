@@ -36,6 +36,11 @@ class Modifier {
     int level = _level ?? 1;
     return base.percentageForLevel(level);
   }
+
+  static Future<Modifier> build(String name) async {
+    ModifierBase base = await ModifierBase.fetchByName(name);
+    return Modifier(base: base);
+  }
 }
 
 @JsonSerializable()
@@ -151,7 +156,7 @@ class ModifierBase {
   static Map<String, ModifierBase> _modifiers = {};
   static Parser _parser = Parser();
 
-  static Future<ModifierBase> fetch(String name) async {
+  static Future<ModifierBase> fetchByName(String name) async {
     if (_modifiers.isEmpty) {
       var list = await fetchAll();
       for (ModifierBase m in list) {

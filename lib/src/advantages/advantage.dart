@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -17,9 +18,15 @@ class Advantage {
 
   int _level;
 
-  List<ModifierBase> modifiers = [];
+  final _Modifiers modifiers = _Modifiers();
 
-  int get cost => base.cost;
+  int get cost {
+    double result = base.cost.toDouble();
+    var x = modifiers.getPercentageForLevel(level);
+    var y = x.toDouble() / 100.0;
+    result += result * y;
+    return result.ceil();
+  }
 
   bool get hasLevels => base.hasLevels;
   int get level {
@@ -28,6 +35,31 @@ class Advantage {
     }
     return _level;
   }
+
+  static Future<Advantage> build(String name) async {
+    var base = await AdvantageBase.fetchByName(name);
+    return Advantage(base: base);
+  }
+}
+
+class _Modifiers extends ListBase<Modifier> {
+  final List<Modifier> l = [];
+
+  int getPercentageForLevel(int level) => l.length > 0
+      ? l.map<int>((a) => a.percentage).reduce((a, b) => a + b)
+      : 0;
+
+  @override
+  int get length => l.length;
+
+  @override
+  set length(int newLength) => l.length = newLength;
+
+  @override
+  Modifier operator [](int index) => l[index];
+
+  @override
+  void operator []=(int index, Modifier value) => l[index] = value;
 }
 
 /// AdvantageBase is the template for an Advantage. It defines the advantage

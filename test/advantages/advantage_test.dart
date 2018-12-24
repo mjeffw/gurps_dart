@@ -52,15 +52,19 @@ void main() {
 
   group('advantage', () {
     test('create', () async {
-      AdvantageBase affliction = await AdvantageBase.fetchByName('Affliction');
-      Advantage adv = Advantage(base: affliction);
+      Advantage adv = await Advantage.build('Affliction');
 
       expect(adv.cost, equals(10));
       expect(adv.hasLevels, isTrue);
       expect(adv.level, equals(1));
 
-      ModifierBase acc = await ModifierBase.fetch('Accurate');
-      adv.modifiers.add(acc);
+      Modifier m = await Modifier.build('Accurate');
+      adv.modifiers.add(m);
+
+      expect(adv.cost, equals(11));
+
+      m.level = 4;
+      expect(adv.cost, equals(12));
     });
   });
 }

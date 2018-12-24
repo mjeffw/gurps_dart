@@ -9,11 +9,11 @@ void main() {
   ModifierBase armorDivisor;
 
   setUp(() async {
-    affects = await ModifierBase.fetch('Affects Insubstantial');
-    affSub = await ModifierBase.fetch('Affects Substantial');
-    accurate = await ModifierBase.fetch('Accurate');
-    area = await ModifierBase.fetch('Area Effect');
-    armorDivisor = await ModifierBase.fetch('Armor Divisor');
+    affects = await ModifierBase.fetchByName('Affects Insubstantial');
+    affSub = await ModifierBase.fetchByName('Affects Substantial');
+    accurate = await ModifierBase.fetchByName('Accurate');
+    area = await ModifierBase.fetchByName('Area Effect');
+    armorDivisor = await ModifierBase.fetchByName('Armor Divisor');
   });
 
   group('Modifier Base', () {
@@ -129,6 +129,11 @@ void main() {
       expect(() {
         mod.level = 2;
       }, throwsStateError);
+    });
+
+    test('alternate constructor', () async {
+      var mod = await Modifier.build('Armor Divisor');
+      expect(mod.base.name, equals('Armor Divisor'));
     });
   });
 }
