@@ -36,11 +36,11 @@ class GurpsDuration {
   GurpsDuration operator -(GurpsDuration other) =>
       new GurpsDuration._seconds(_duration - other._duration);
 
-  GurpsDuration operator *(GurpsDuration other) =>
-      new GurpsDuration._seconds(_duration * other._duration);
+  GurpsDuration operator *(num other) =>
+      new GurpsDuration._seconds((_duration * other).floor());
 
-  GurpsDuration operator ~/(GurpsDuration other) =>
-      new GurpsDuration._seconds(_duration ~/ other._duration);
+  GurpsDuration operator ~/(num other) =>
+      new GurpsDuration._seconds((_duration ~/ other).floor());
 
   bool operator <(GurpsDuration other) => _duration < other._duration;
 
