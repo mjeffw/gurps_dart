@@ -6,7 +6,7 @@ part of 'modifier.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ModifierBase _$ModifierFromJson(Map<String, dynamic> json) {
+ModifierBase _$ModifierBaseFromJson(Map<String, dynamic> json) {
   $checkKeys(json, requiredKeys: const ['name', 'percentage']);
   return ModifierBase(
       name: json['name'] as String,
@@ -20,7 +20,7 @@ ModifierBase _$ModifierFromJson(Map<String, dynamic> json) {
       levelRange: json['levelRange'] as String ?? '[1,4294967296]');
 }
 
-Map<String, dynamic> _$ModifierToJson(ModifierBase instance) =>
+Map<String, dynamic> _$ModifierBaseToJson(ModifierBase instance) =>
     <String, dynamic>{
       'name': instance.name,
       'percentage': instance.percentage,

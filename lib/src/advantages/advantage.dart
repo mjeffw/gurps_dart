@@ -72,7 +72,14 @@ class _Modifiers extends ListBase<Modifier> {
 @JsonSerializable()
 class AdvantageBase {
   AdvantageBase(
-      {this.name, this.cost, this.enhancements, this.types, this.hasLevels});
+      {this.name,
+      this.cost,
+      this.enhancements,
+      this.types,
+      this.hasLevels,
+      this.requiresSpecialization,
+      this.specialization,
+      this.specializations});
 
   factory AdvantageBase.fromJson(Map<String, dynamic> json) {
     return _$AdvantageBaseFromJson(json);
@@ -92,6 +99,15 @@ class AdvantageBase {
 
   @JsonKey(defaultValue: false)
   final bool hasLevels;
+
+  @JsonKey(defaultValue: true)
+  final bool requiresSpecialization;
+
+  @JsonKey(defaultValue: 'Small Category')
+  final String specialization;
+
+  @JsonKey(defaultValue: null)
+  final Map<String, Specialization> specializations;
 
   bool get hasEnhancements => !enhancements.isEmpty;
   bool get isMental => types.contains('Mental');
@@ -130,13 +146,27 @@ class AdvantageBase {
 class Enhancement {
   Enhancement({this.name, this.cost});
 
-  factory Enhancement.fromJson(Map<String, dynamic> json) {
-    return _$EnhancementFromJson(json);
-  }
+  factory Enhancement.fromJson(Map<String, dynamic> json) =>
+      _$EnhancementFromJson(json);
 
   @JsonKey(required: true, nullable: false)
   final String name;
 
   @JsonKey(defaultValue: null)
   final int cost;
+}
+
+/// An advantage may require specialization, and the specialization chosen may
+/// affect the cost. This class represents one such specialization along with a
+/// list of examples if applicable.
+@JsonSerializable(includeIfNull: false)
+class Specialization {
+  Specialization({this.name, this.cost, this.examples});
+
+  factory Specialization.fromJson(Map<String, dynamic> e) =>
+      _$SpecializationFromJson(e);
+
+  final String name;
+  final int cost;
+  final List<String> examples;
 }

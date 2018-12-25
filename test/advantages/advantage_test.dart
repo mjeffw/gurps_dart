@@ -36,7 +36,7 @@ void main() {
       expect(absoluteTiming.hasLevels, isFalse);
     });
 
-    test('Affliction', () async {
+    test('affliction', () async {
       var affliction = await AdvantageBase.fetchByName('Affliction');
       expect(affliction.name, 'Affliction');
       expect(affliction.cost, 10);
@@ -47,6 +47,19 @@ void main() {
       expect(affliction.isPhysical, isTrue);
       expect(affliction.isSupernatural, isFalse);
       expect(affliction.isMundane, isFalse);
+    });
+
+    test('create', () async {
+      var create = await AdvantageBase.fetchByName('Create');
+      expect(create.name, 'Create');
+      expect(create.cost, 10);
+      expect(create.hasLevels, isTrue);
+      expect(create.isExotic, isTrue);
+      expect(create.isMental, isFalse);
+      expect(create.isSocial, isFalse);
+      expect(create.isPhysical, isTrue);
+      expect(create.isSupernatural, isFalse);
+      expect(create.isMundane, isFalse);
     });
   });
 
@@ -77,6 +90,10 @@ void main() {
 
       adv.level = 4;
       expect(adv.cost, equals(48));
+    });
+
+    test('Create Acid', () async {
+      Advantage createAcid = await Advantage.build('Create');
     });
   });
 }

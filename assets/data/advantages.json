@@ -29,6 +29,69 @@
                 "Physical",
                 "Exotic"
             ]
+        },
+        "Create": {
+            "name": "Create",
+            "cost": 10,
+            "types": [
+                "Exotic",
+                "Physical"
+            ],
+            "hasLevels": true,
+            "requiresSpecialization": true,
+            "defaultSpecialization": "Small Category",
+            "specializations": {
+                "Large Category": {
+                    "name": "Large Category",
+                    "cost": 40,
+                    "examples": [
+                        "Organic Material",
+                        "Inorganic Material",
+                        "All Electromagnetic waves",
+                        "All sounds and vibrations"
+                    ]
+                },
+                "Medium Category": {
+                    "name": "Medium Category",
+                    "cost": 20,
+                    "examples": [
+                        "Acids",
+                        "Biochemicals",
+                        "Drugs",
+                        "Earth",
+                        "Metal",
+                        "Sound",
+                        "Long-Wave EM (radio, microwaves, far IR)",
+                        "Short-Wave EM (far UV, X-rays, gamma rays)",
+                        "Radiation (alpha and beta particles, gamma rays, etc)"
+                    ]
+                },
+                "Small Category": {
+                    "name": "Small Category",
+                    "cost": 10,
+                    "examples": [
+                        "Ferrous metals",
+                        "Fire",
+                        "Fossil Fuels",
+                        "Wood",
+                        "Gamma rays",
+                        "Infrared",
+                        "Ultrasonics",
+                        "Visible Light"
+                    ]
+                },
+                "Specific Item": {
+                    "name": "Specific Item",
+                    "cost": 5,
+                    "examples": [
+                        "Iron",
+                        "Salt",
+                        "Water",
+                        "Air",
+                        "Brine"
+                    ]
+                }
+            }
         }
     }
 }

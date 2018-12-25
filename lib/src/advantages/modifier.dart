@@ -58,7 +58,7 @@ class ModifierBase {
       : _exp = _parser.parse(levelTextExpression);
 
   factory ModifierBase.fromJson(Map<String, dynamic> json) =>
-      _$ModifierFromJson(json);
+      _$ModifierBaseFromJson(json);
 
   @JsonKey(nullable: false, required: true)
   final String name;
