@@ -3,20 +3,25 @@ import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:gurps_dart/src/util/core_utils.dart';
 
 part 'modifier.g.dart';
 
-var indexofExpression = RegExp(r'INDEXOF\[(.*)\]');
-var rangeExpression = RegExp(r'\[(\d+),(\d+)\]');
+var indexofExp = RegExp(r'INDEXOF\[(.*)\]');
+var rangeExp = RegExp(r'\[(\d+),(\d+)\]');
+
+const blank = "''";
 
 class Modifier {
-  Modifier({this.base});
+  Modifier({ModifierBase base})
+      : assert(base != null),
+        this._base = base;
 
-  final ModifierBase base;
+  final ModifierBase _base;
 
   int _level;
 
-  bool get hasLevels => base.hasLevels;
+  bool get hasLevels => _base.hasLevels;
 
   int get level {
     if (_level == null && hasLevels) {
@@ -26,42 +31,59 @@ class Modifier {
   }
 
   set level(int level) {
-    if (!hasLevels) {
-      throw StateError('cannot set level on ${base.name}');
-    }
+    _base.validateLevel(level);
     _level = level;
   }
 
+  String get name {
+    if (_base.useLevelTextForName) {
+      return _base.textForLevel(level);
+    }
+    return _base._name;
+  }
+
+  /// Returns the description of the Modifier usable in the 'statistics' block
+  /// of a Power or Ability.
+  String get text {
+    return '$name${_levelText()}, ${toSignedString(percentage)}%';
+  }
+
   int get percentage {
-    int level = _level ?? 1;
-    return base.percentageForLevel(level);
+    return (hasLevels) ? _base.percentageForLevel(level) : _base.percentage;
   }
 
   static Future<Modifier> build(String name) async {
     ModifierBase base = await ModifierBase.fetchByName(name);
     return Modifier(base: base);
   }
+
+  String _levelText() {
+    return (hasLevels)
+        ? _base.textForLevel(level).replaceAll(r'$LEVEL$', level.toString())
+        : '';
+  }
 }
 
 @JsonSerializable()
 class ModifierBase {
   ModifierBase(
-      {this.name,
+      {String name,
       this.percentage,
       this.isAttack,
       this.hasLevels,
       this.levelTextExpression,
-      this.levelTextPrefix,
-      this.levelTextSuffix,
       this.levelTextExprCustom,
-      this.levelRange})
-      : _exp = _parser.parse(levelTextExpression);
+      this.levelTextTemplate,
+      this.levelRange,
+      this.useLevelTextForName})
+      : _exp = _parser.parse(levelTextExpression),
+        _name = name;
 
   factory ModifierBase.fromJson(Map<String, dynamic> json) =>
       _$ModifierBaseFromJson(json);
 
   @JsonKey(nullable: false, required: true)
-  final String name;
+  final String _name;
 
   /// If not leveled, this is the flat value of the modifier. Else, this is the
   /// percentage cost per level.
@@ -77,8 +99,12 @@ class ModifierBase {
   // The fields below only apply if the Modifier has levels.
 
   /// Leveled modifiers sometimes need to display text like "2 yards" (for
-  /// level 1), "4 yards" (for level 2), etc. This is generalized to
-  /// "$prefix $levelValue $suffix" where $levelValue is an equation
+  /// level 1), "4 yards" (for level 2), etc. LevelTextTemplate captures
+  /// the format of these expressions where the level Value is represented
+  /// by the $LEVELTEXT$ token.
+
+  @JsonKey(defaultValue: r' $LEVELTEXT$')
+  final String levelTextTemplate;
 
   /// Allowable range of level.
   @JsonKey(defaultValue: "[1,4294967296]")
@@ -87,12 +113,6 @@ class ModifierBase {
   @JsonKey(defaultValue: 'x')
   final String levelTextExpression;
 
-  @JsonKey(defaultValue: '')
-  final String levelTextPrefix;
-
-  @JsonKey(defaultValue: '')
-  final String levelTextSuffix;
-
   /// Custom expression string -- if the conversion from a level to text is
   /// algebraic, use the levelTextExpression, above. This field allows for
   /// other expressions. Currently supported is INDEXOF[a,b,c,...] which allows
@@ -100,6 +120,9 @@ class ModifierBase {
   /// value in levelTextExpression.
   @JsonKey(defaultValue: '')
   final String levelTextExprCustom;
+
+  @JsonKey(defaultValue: false)
+  final bool useLevelTextForName;
 
   // Fields below here are working variables, not persisted.
   @JsonKey(ignore: true)
@@ -111,44 +134,51 @@ class ModifierBase {
   @JsonKey(ignore: true)
   final Variable _x = Variable('x');
 
+  String get name => _name;
+
   int percentageForLevel(int level) {
-    _validateLevel(level);
+    validateLevel(level);
     return level * percentage;
   }
 
-  void _validateLevel(int level) {
+  void validateLevel(int level) {
     if (!hasLevels) {
-      throw '$name does not have levels';
+      throw StateError('$_name does not have levels');
     }
 
-    Match match = rangeExpression.firstMatch(levelRange);
+    Match match = rangeExp.firstMatch(levelRange);
     var start = int.parse(match.group(1));
     var end = int.parse(match.group(2));
     if (level < start || level > end) {
-      throw RangeError('$name level must match range $levelRange');
+      throw RangeError('$_name level must match range $levelRange');
     }
   }
 
   String textForLevel(int level) {
-    _validateLevel(level);
+    validateLevel(level);
 
     String baseValue = _getLevelTextBaseValue(level);
-    return '$levelTextPrefix$baseValue$levelTextSuffix';
+
+    String result = levelTextTemplate.replaceAll(r'$LEVELTEXT$', baseValue);
+    return result;
   }
 
   String _getLevelTextBaseValue(int level) {
     if (_hasCustomLevelExpression()) {
-      String group =
-          indexofExpression.firstMatch(levelTextExprCustom)?.group(1);
-      if (group == null) {
-        return 'Bad levelTextExprCustom: $levelTextExprCustom';
-      }
-      return group.split(',')[level - 1];
+      return getCustomLevelExpressionValue(level);
     } else {
       _cm.bindVariable(_x, Number(level));
-      double y = _exp.evaluate(EvaluationType.REAL, _cm);
-      return y.floor().toString();
+      return _exp.evaluate(EvaluationType.REAL, _cm).floor().toString();
     }
+  }
+
+  String getCustomLevelExpressionValue(int level) {
+    String group = indexofExp.firstMatch(levelTextExprCustom)?.group(1);
+    if (group == null) {
+      return 'Bad levelTextExprCustom: $levelTextExprCustom';
+    }
+    var x = group.split(';')[level - 1];
+    return (x == blank) ? '' : x.trim();
   }
 
   bool _hasCustomLevelExpression() => levelTextExprCustom.length > 0;
@@ -160,7 +190,7 @@ class ModifierBase {
     if (_modifiers.isEmpty) {
       var list = await fetchAll();
       for (ModifierBase m in list) {
-        _modifiers[m.name] = m;
+        _modifiers[m._name] = m;
       }
     }
     return _modifiers[name];

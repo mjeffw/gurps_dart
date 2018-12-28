@@ -46,14 +46,14 @@ void main() {
 
         expect(() {
           affects.percentageForLevel(1);
-        }, throwsA('Affects Insubstantial does not have levels'));
+        }, throwsStateError);
       });
 
       test('Affects Substantial', () {
         expect(affSub.hasLevels, isFalse);
         expect(() {
           affSub.percentageForLevel(1);
-        }, throwsA('Affects Substantial does not have levels'));
+        }, throwsStateError);
       });
 
       test('Accurate', () {
@@ -87,21 +87,21 @@ void main() {
 
     group('has text for level', () {
       test('Accurate', () {
-        expect(accurate.textForLevel(1), equals("+1"));
-        expect(accurate.textForLevel(2), equals("+2"));
-        expect(accurate.textForLevel(3), equals("+3"));
+        expect(accurate.textForLevel(1), equals(" +1"));
+        expect(accurate.textForLevel(2), equals(" +2"));
+        expect(accurate.textForLevel(3), equals(" +3"));
       });
       test('Area Effect', () {
-        expect(area.textForLevel(1), equals("2 yards"));
-        expect(area.textForLevel(2), equals("4 yards"));
-        expect(area.textForLevel(3), equals("8 yards"));
-        expect(area.textForLevel(4), equals("16 yards"));
+        expect(area.textForLevel(1), equals(", 2 yards"));
+        expect(area.textForLevel(2), equals(", 4 yards"));
+        expect(area.textForLevel(3), equals(", 8 yards"));
+        expect(area.textForLevel(4), equals(", 16 yards"));
       });
       test('Armor Divisor', () {
-        expect(armorDivisor.textForLevel(1), equals("(2)"));
-        expect(armorDivisor.textForLevel(2), equals("(3)"));
-        expect(armorDivisor.textForLevel(3), equals("(5)"));
-        expect(armorDivisor.textForLevel(4), equals("(10)"));
+        expect(armorDivisor.textForLevel(1), equals(" (2)"));
+        expect(armorDivisor.textForLevel(2), equals(" (3)"));
+        expect(armorDivisor.textForLevel(3), equals(" (5)"));
+        expect(armorDivisor.textForLevel(4), equals(" (10)"));
         expect(() {
           armorDivisor.textForLevel(5);
         }, throwsA(TypeMatcher<RangeError>()));
@@ -110,30 +110,97 @@ void main() {
   });
 
   group("Modifier", () {
-    test('leveled', () {
+    test('Accurate', () {
       Modifier mod = Modifier(base: accurate);
 
       expect(mod.hasLevels, isTrue);
       expect(mod.level, equals(1));
       expect(mod.percentage, equals(5));
+      expect(mod.text, equals('Accurate +1, +5%'));
 
       mod.level = 2;
       expect(mod.percentage, equals(10));
+      expect(mod.text, equals('Accurate +2, +10%'));
     });
 
-    test('unleveled', () {
+    test('Affects Insubstantial', () {
       var mod = Modifier(base: affects);
       expect(mod.hasLevels, isFalse);
       expect(mod.level, isNull);
+      expect(mod.text, equals('Affects Insubstantial, +20%'));
 
       expect(() {
         mod.level = 2;
       }, throwsStateError);
     });
 
-    test('alternate constructor', () async {
+    test('Affects Substantial', () {
+      var mod = Modifier(base: affSub);
+      expect(mod.hasLevels, isFalse);
+      expect(mod.level, isNull);
+      expect(mod.text, equals('Affects Substantial, +40%'));
+
+      expect(() {
+        mod.level = 2;
+      }, throwsStateError);
+    });
+
+    test('Area Effect', () {
+      var mod = Modifier(base: area);
+      expect(mod.hasLevels, isTrue);
+      expect(mod.level, 1);
+      expect(mod.text, equals('Area Effect, 2 yards, +50%'));
+
+      mod.level = 2;
+      expect(mod.text, equals('Area Effect, 4 yards, +100%'));
+
+      mod.level = 3;
+      expect(mod.text, equals('Area Effect, 8 yards, +150%'));
+    });
+
+    test('Armor Divisor', () async {
       var mod = await Modifier.build('Armor Divisor');
-      expect(mod.base.name, equals('Armor Divisor'));
+      expect(mod.name, equals('Armor Divisor'));
+      expect(mod.text, equals('Armor Divisor (2), +50%'));
+
+      mod.level = 2;
+      expect(mod.text, equals('Armor Divisor (3), +100%'));
+
+      mod.level = 3;
+      expect(mod.text, equals('Armor Divisor (5), +150%'));
+
+      mod.level = 4;
+      expect(mod.text, equals('Armor Divisor (10), +200%'));
+
+      expect(() {
+        mod.level = 5;
+      }, throwsRangeError);
+    });
+
+    test('Blockable', () async {
+      var mod = await Modifier.build('Blockable');
+      expect(mod.name, equals('Blockable'));
+      expect(mod.hasLevels, isTrue);
+      expect(mod.level, equals(1));
+      expect(mod.percentage, equals(-5));
+      expect(mod.text, equals('Blockable, -5%'));
+
+      mod.level = 2;
+      expect(mod.name, equals('Blockable'));
+      expect(mod.level, equals(2));
+      expect(mod.percentage, equals(-10));
+
+      print('${mod.name}, ${mod.text}');
+      expect(mod.text, equals('Blockable, and can be parried, -10%'));
+    });
+
+    test('Cosmic', () async {
+      var mod = await Modifier.build('Cosmic');
+      expect(mod.name, equals('Cosmic'));
+      expect(mod.text, equals('Cosmic, Adding utility, +50%'));
+      expect(mod.hasLevels, isTrue);
+      expect(mod.level, equals(1));
+      expect(mod.percentage, equals(50));
     });
   });
 }

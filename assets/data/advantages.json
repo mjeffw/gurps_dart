@@ -92,6 +92,19 @@
                     ]
                 }
             }
+        },
+        "Innate Attack": {
+            "name": "Innate Attack",
+            "cost": null,
+            "hasLevels": true,
+            "requiresSpecialization": true,
+            "defaultSpecialization": "Crushing",
+            "specializations": {
+                "Crushing": {
+                    "name": "Crushing",
+                    "cost": 5
+                }
+            }
         }
     }
 }

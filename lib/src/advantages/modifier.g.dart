@@ -7,28 +7,28 @@ part of 'modifier.dart';
 // **************************************************************************
 
 ModifierBase _$ModifierBaseFromJson(Map<String, dynamic> json) {
-  $checkKeys(json, requiredKeys: const ['name', 'percentage']);
+  $checkKeys(json, requiredKeys: const ['percentage']);
   return ModifierBase(
       name: json['name'] as String,
       percentage: json['percentage'] as int,
       isAttack: json['isAttack'] as bool ?? false,
       hasLevels: json['hasLevels'] as bool ?? false,
       levelTextExpression: json['levelTextExpression'] as String ?? 'x',
-      levelTextPrefix: json['levelTextPrefix'] as String ?? '',
-      levelTextSuffix: json['levelTextSuffix'] as String ?? '',
       levelTextExprCustom: json['levelTextExprCustom'] as String ?? '',
-      levelRange: json['levelRange'] as String ?? '[1,4294967296]');
+      levelTextTemplate: json['levelTextTemplate'] as String ?? r'$LEVELTEXT$',
+      levelRange: json['levelRange'] as String ?? '[1,4294967296]',
+      useLevelTextForName: json['useLevelTextForName'] as bool ?? false);
 }
 
 Map<String, dynamic> _$ModifierBaseToJson(ModifierBase instance) =>
     <String, dynamic>{
-      'name': instance.name,
       'percentage': instance.percentage,
       'isAttack': instance.isAttack,
       'hasLevels': instance.hasLevels,
+      'levelTextTemplate': instance.levelTextTemplate,
       'levelRange': instance.levelRange,
       'levelTextExpression': instance.levelTextExpression,
-      'levelTextPrefix': instance.levelTextPrefix,
-      'levelTextSuffix': instance.levelTextSuffix,
-      'levelTextExprCustom': instance.levelTextExprCustom
+      'levelTextExprCustom': instance.levelTextExprCustom,
+      'useLevelTextForName': instance.useLevelTextForName,
+      'name': instance.name
     };

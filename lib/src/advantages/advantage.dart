@@ -15,6 +15,7 @@ class Advantage {
   Advantage({this.base});
 
   final AdvantageBase base;
+
   int _level;
   final _Modifiers modifiers = _Modifiers();
   Specialization specialization;
@@ -29,6 +30,8 @@ class Advantage {
   }
 
   int _adjustedBaseCost() => specialization?.cost ?? base.cost;
+
+  bool get requiresSpecialization => base.requiresSpecialization;
 
   bool get hasLevels => base.hasLevels;
 
@@ -45,7 +48,11 @@ class Advantage {
 
   static Future<Advantage> build(String name) async {
     var base = await AdvantageBase.fetchByName(name);
-    return Advantage(base: base);
+    var adv = Advantage(base: base);
+    if (base.requiresSpecialization) {
+      adv.specialization = base.defaultSpecialization;
+    }
+    return adv;
   }
 }
 
