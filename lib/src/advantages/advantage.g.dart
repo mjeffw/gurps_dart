@@ -7,7 +7,7 @@ part of 'advantage.dart';
 // **************************************************************************
 
 AdvantageBase _$AdvantageBaseFromJson(Map<String, dynamic> json) {
-  $checkKeys(json, requiredKeys: const ['name', 'cost']);
+  $checkKeys(json, requiredKeys: const ['name']);
   return AdvantageBase(
       name: json['name'] as String,
       cost: json['cost'] as int,
@@ -20,8 +20,8 @@ AdvantageBase _$AdvantageBaseFromJson(Map<String, dynamic> json) {
           {},
       types: (json['types'] as List)?.map((e) => e as String)?.toList() ?? [],
       hasLevels: json['hasLevels'] as bool ?? false,
-      requiresSpecialization: json['requiresSpecialization'] as bool ?? true,
-      specialization: json['specialization'] as String ?? 'Small Category',
+      requiresSpecialization: json['requiresSpecialization'] as bool ?? false,
+      defaultSpecialization: json['defaultSpecialization'] as String,
       specializations: (json['specializations'] as Map<String, dynamic>)?.map(
           (k, e) => MapEntry(
               k,
@@ -33,13 +33,13 @@ AdvantageBase _$AdvantageBaseFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$AdvantageBaseToJson(AdvantageBase instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'cost': instance.cost,
       'enhancements': instance.enhancements,
       'types': instance.types,
       'hasLevels': instance.hasLevels,
       'requiresSpecialization': instance.requiresSpecialization,
-      'specialization': instance.specialization,
-      'specializations': instance.specializations
+      'specializations': instance.specializations,
+      'defaultSpecialization': instance.defaultSpecialization,
+      'cost': instance.cost
     };
 
 Enhancement _$EnhancementFromJson(Map<String, dynamic> json) {

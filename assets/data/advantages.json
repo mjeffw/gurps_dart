@@ -32,7 +32,7 @@
         },
         "Create": {
             "name": "Create",
-            "cost": 10,
+            "cost": 0,
             "types": [
                 "Exotic",
                 "Physical"

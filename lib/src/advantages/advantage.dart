@@ -15,18 +15,20 @@ class Advantage {
   Advantage({this.base});
 
   final AdvantageBase base;
-
   int _level;
-
   final _Modifiers modifiers = _Modifiers();
+  Specialization specialization;
 
   int get cost {
-    double result = base.cost.toDouble() * level;
+    int value = _adjustedBaseCost();
+    double result = value.toDouble() * level;
     var x = modifiers.getPercentageForLevel(level);
     var y = x.toDouble() / 100.0;
     result += result * y;
     return result.ceil();
   }
+
+  int _adjustedBaseCost() => specialization?.cost ?? base.cost;
 
   bool get hasLevels => base.hasLevels;
 
@@ -73,13 +75,17 @@ class _Modifiers extends ListBase<Modifier> {
 class AdvantageBase {
   AdvantageBase(
       {this.name,
-      this.cost,
+      int cost,
       this.enhancements,
       this.types,
       this.hasLevels,
       this.requiresSpecialization,
-      this.specialization,
-      this.specializations});
+      String defaultSpecialization,
+      this.specializations})
+      : _cost = cost,
+        _defaultSpecialization = (specializations == null)
+            ? null
+            : specializations[defaultSpecialization];
 
   factory AdvantageBase.fromJson(Map<String, dynamic> json) {
     return _$AdvantageBaseFromJson(json);
@@ -89,7 +95,7 @@ class AdvantageBase {
   final String name;
 
   @JsonKey(nullable: false, required: true)
-  final int cost;
+  final int _cost;
 
   @JsonKey(defaultValue: <String, Enhancement>{})
   final Map<String, Enhancement> enhancements;
@@ -100,14 +106,16 @@ class AdvantageBase {
   @JsonKey(defaultValue: false)
   final bool hasLevels;
 
-  @JsonKey(defaultValue: true)
+  @JsonKey(defaultValue: false)
   final bool requiresSpecialization;
 
-  @JsonKey(defaultValue: 'Small Category')
-  final String specialization;
+  @JsonKey(defaultValue: null)
+  final Specialization _defaultSpecialization;
 
   @JsonKey(defaultValue: null)
   final Map<String, Specialization> specializations;
+
+  Specialization get defaultSpecialization => _defaultSpecialization;
 
   bool get hasEnhancements => !enhancements.isEmpty;
   bool get isMental => types.contains('Mental');
@@ -116,6 +124,13 @@ class AdvantageBase {
   bool get isExotic => types.contains('Exotic');
   bool get isSupernatural => types.contains('Supernatural');
   bool get isMundane => !isSupernatural && !isExotic;
+
+  int get cost {
+    if (requiresSpecialization) {
+      return _defaultSpecialization.cost;
+    }
+    return _cost;
+  }
 
   static Map<String, dynamic> _advantages = <String, dynamic>{};
 

@@ -18,6 +18,8 @@ void main() {
       expect(three60Vision.isSupernatural, isFalse);
       expect(three60Vision.isMundane, isFalse);
       expect(three60Vision.hasLevels, isFalse);
+      expect(three60Vision.hasEnhancements, isFalse);
+      expect(three60Vision.requiresSpecialization, isFalse);
     });
 
     test('absolute timing', () async {
@@ -34,6 +36,7 @@ void main() {
       expect(absoluteTiming.enhancements.values, hasLength(1));
       expect(absoluteTiming.enhancements['Chronolocation'].cost, equals(5));
       expect(absoluteTiming.hasLevels, isFalse);
+      expect(absoluteTiming.requiresSpecialization, isFalse);
     });
 
     test('affliction', () async {
@@ -47,6 +50,8 @@ void main() {
       expect(affliction.isPhysical, isTrue);
       expect(affliction.isSupernatural, isFalse);
       expect(affliction.isMundane, isFalse);
+      expect(affliction.hasEnhancements, isFalse);
+      expect(affliction.requiresSpecialization, isFalse);
     });
 
     test('create', () async {
@@ -60,6 +65,9 @@ void main() {
       expect(create.isPhysical, isTrue);
       expect(create.isSupernatural, isFalse);
       expect(create.isMundane, isFalse);
+      expect(create.hasEnhancements, isFalse);
+      expect(create.requiresSpecialization, isTrue);
+      expect(create.defaultSpecialization.name, equals('Small Category'));
     });
   });
 
@@ -94,6 +102,9 @@ void main() {
 
     test('Create Acid', () async {
       Advantage createAcid = await Advantage.build('Create');
+      createAcid.specialization =
+          createAcid.base.specializations['Medium Category'];
+      expect(createAcid.cost, equals(20));
     });
   });
 }
