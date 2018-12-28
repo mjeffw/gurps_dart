@@ -145,14 +145,14 @@ class AdvantageBase {
     // Read the advantage.json file int a map only once; when fetching by name,
     // look up from the map and turn the resulting map into an object.
     if (_advantages.isEmpty) {
-      await readModifierData() as Map<String, dynamic>;
+      await readAdvantageData() as Map<String, dynamic>;
     }
     AdvantageBase adv =
         _$AdvantageBaseFromJson(_advantages[name] as Map<String, dynamic>);
     return adv;
   }
 
-  static void readModifierData() async {
+  static void readAdvantageData() async {
     var x = File('assets/data/advantages.json').readAsString();
     Map y =
         await x.then<Map>((fileContents) => json.decode(fileContents) as Map);

@@ -1,21 +1,21 @@
 {
-    "modifiers": [
-        {
+    "modifiers": {
+        "Accurate": {
             "name": "Accurate",
             "percentage": 5,
             "isAttack": true,
             "hasLevels": true,
             "levelTextTemplate": " +$LEVELTEXT$"
         },
-        {
+        "Affects Insubstantial": {
             "name": "Affects Insubstantial",
             "percentage": 20
         },
-        {
+        "Affects Substantial": {
             "name": "Affects Substantial",
             "percentage": 40
         },
-        {
+        "Area Effect": {
             "name": "Area Effect",
             "percentage": 50,
             "isAttack": true,
@@ -23,7 +23,7 @@
             "levelTextTemplate": ", $LEVELTEXT$ yards",
             "levelTextExpression": "2^x"
         },
-        {
+        "Armor Divisor": {
             "name": "Armor Divisor",
             "percentage": 50,
             "isAttack": true,
@@ -32,22 +32,28 @@
             "levelTextExprCustom": "INDEXOF[2;3;5;10]",
             "levelRange": "[1,4]"
         },
-        {
+        "Blockable": {
             "name": "Blockable",
             "percentage": -5,
             "isAttack": true,
             "hasLevels": true,
             "levelRange": "[1,2]",
+            "levelTextTemplate": "$LEVELTEXT$",
             "levelTextExprCustom": "INDEXOF['';, and can be parried]"
         },
-        {
+        "Cosmic": {
             "name": "Cosmic",
             "percentage": 50,
             "isAttack": false,
             "hasLevels": true,
             "levelRange": "[1,3]",
             "levelTextTemplate": ", $LEVELTEXT$",
-            "levelTextExprCustom": "INDEXOF[Adding utility;Cheating;Godlike tricks]"
+            "levelTextExprCustom": "INDEXOF[Adding utility;Cheating;Godlike tricks]",
+            "percentPerLevel": [
+                50,
+                100,
+                300
+            ]
         }
-    ]
+    }
 }

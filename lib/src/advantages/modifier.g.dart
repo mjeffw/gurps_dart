@@ -15,9 +15,10 @@ ModifierBase _$ModifierBaseFromJson(Map<String, dynamic> json) {
       hasLevels: json['hasLevels'] as bool ?? false,
       levelTextExpression: json['levelTextExpression'] as String ?? 'x',
       levelTextExprCustom: json['levelTextExprCustom'] as String ?? '',
-      levelTextTemplate: json['levelTextTemplate'] as String ?? r'$LEVELTEXT$',
+      levelTextTemplate: json['levelTextTemplate'] as String ?? r' $LEVELTEXT$',
       levelRange: json['levelRange'] as String ?? '[1,4294967296]',
-      useLevelTextForName: json['useLevelTextForName'] as bool ?? false);
+      percentPerLevel:
+          (json['percentPerLevel'] as List)?.map((e) => e as int)?.toList());
 }
 
 Map<String, dynamic> _$ModifierBaseToJson(ModifierBase instance) =>
@@ -29,6 +30,6 @@ Map<String, dynamic> _$ModifierBaseToJson(ModifierBase instance) =>
       'levelRange': instance.levelRange,
       'levelTextExpression': instance.levelTextExpression,
       'levelTextExprCustom': instance.levelTextExprCustom,
-      'useLevelTextForName': instance.useLevelTextForName,
+      'percentPerLevel': instance.percentPerLevel,
       'name': instance.name
     };

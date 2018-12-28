@@ -190,7 +190,6 @@ void main() {
       expect(mod.level, equals(2));
       expect(mod.percentage, equals(-10));
 
-      print('${mod.name}, ${mod.text}');
       expect(mod.text, equals('Blockable, and can be parried, -10%'));
     });
 
@@ -201,6 +200,12 @@ void main() {
       expect(mod.hasLevels, isTrue);
       expect(mod.level, equals(1));
       expect(mod.percentage, equals(50));
+
+      mod.level = 2;
+      expect(mod.text, equals('Cosmic, Cheating, +100%'));
+
+      mod.level = 3;
+      expect(mod.text, equals('Cosmic, Godlike tricks, +300%'));
     });
   });
 }
