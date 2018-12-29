@@ -23,6 +23,7 @@ class Modifier {
 
   final ModifierBase _base;
 
+  String get name => _base._name;
   bool get hasLevels => _base.hasLevels;
 
   int _level;
@@ -39,9 +40,7 @@ class Modifier {
     _level = level;
   }
 
-  String get name {
-    return _base._name;
-  }
+  String specializationText;
 
   /// Returns the description of the Modifier usable in the 'statistics' block
   /// of a Power or Ability.
@@ -59,9 +58,8 @@ class Modifier {
     if (hasLevels) {
       var text = _base.textForLevel(level);
       var levelText = text.replaceAll(r'$LEVEL$', level.toString());
-      return levelText;
+      return specializationText == null ? levelText : ', $specializationText';
     }
-
     return '';
   }
 

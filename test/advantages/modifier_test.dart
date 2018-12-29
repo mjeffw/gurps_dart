@@ -206,6 +206,14 @@ void main() {
 
       mod.level = 3;
       expect(mod.text, equals('Cosmic, Godlike tricks, +300%'));
+
+      mod.level = 1;
+      mod.specializationText =
+          'Does knockback-based damage against diffuse targets';
+      expect(
+          mod.text,
+          equals(
+              'Cosmic, Does knockback-based damage against diffuse targets, +50%'));
     });
   });
 }
