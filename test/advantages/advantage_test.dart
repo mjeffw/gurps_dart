@@ -3,11 +3,13 @@ import 'package:gurps_dart/src/advantages/advantage.dart';
 import 'package:gurps_dart/src/advantages/modifier.dart';
 
 void main() {
-  setUp(() async {});
+  setUp(() async {
+    await AdvantageBase.readAdvantageData();
+  });
 
   group('advantage base', () {
-    test('360 vision', () async {
-      var three60Vision = await AdvantageBase.fetchByName('360° Vision');
+    test('360 vision', () {
+      var three60Vision = AdvantageBase.fetchByName('360° Vision');
 
       expect(three60Vision.name, equals('360° Vision'));
       expect(three60Vision.cost, equals(25));
@@ -22,8 +24,8 @@ void main() {
       expect(three60Vision.requiresSpecialization, isFalse);
     });
 
-    test('absolute timing', () async {
-      var absoluteTiming = await AdvantageBase.fetchByName('Absolute Timing');
+    test('absolute timing', () {
+      var absoluteTiming = AdvantageBase.fetchByName('Absolute Timing');
       expect(absoluteTiming.name, 'Absolute Timing');
       expect(absoluteTiming.cost, 2);
       expect(absoluteTiming.isExotic, isFalse);
@@ -39,8 +41,8 @@ void main() {
       expect(absoluteTiming.requiresSpecialization, isFalse);
     });
 
-    test('affliction', () async {
-      var affliction = await AdvantageBase.fetchByName('Affliction');
+    test('affliction', () {
+      var affliction = AdvantageBase.fetchByName('Affliction');
       expect(affliction.name, 'Affliction');
       expect(affliction.cost, 10);
       expect(affliction.hasLevels, isTrue);
@@ -54,8 +56,8 @@ void main() {
       expect(affliction.requiresSpecialization, isFalse);
     });
 
-    test('create', () async {
-      var create = await AdvantageBase.fetchByName('Create');
+    test('create', () {
+      var create = AdvantageBase.fetchByName('Create');
       expect(create.name, 'Create');
       expect(create.cost, 10);
       expect(create.hasLevels, isTrue);
@@ -72,22 +74,22 @@ void main() {
   });
 
   group('advantage', () {
-    test('create', () async {
-      Advantage adv = await Advantage.build('Affliction');
+    test('create', () {
+      Advantage adv = Advantage.build('Affliction');
 
       expect(adv.cost, equals(10));
       expect(adv.hasLevels, isTrue);
       expect(adv.level, equals(1));
     });
 
-    test('raising level', () async {
-      Advantage adv = await Advantage.build('Affliction');
+    test('raising level', () {
+      Advantage adv = Advantage.build('Affliction');
       adv.level = 4;
       expect(adv.cost, equals(40));
     });
 
     test('adding modifier', () async {
-      Advantage adv = await Advantage.build('Affliction');
+      Advantage adv = Advantage.build('Affliction');
       Modifier m = await Modifier.build('Accurate');
       adv.modifiers.add(m);
 
@@ -100,8 +102,8 @@ void main() {
       expect(adv.cost, equals(48));
     });
 
-    test('Create Acid', () async {
-      Advantage createAcid = await Advantage.build('Create');
+    test('Create Acid', () {
+      Advantage createAcid = Advantage.build('Create');
       createAcid.specialization =
           createAcid.base.specializations['Medium Category'];
       expect(createAcid.cost, equals(20));

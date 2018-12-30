@@ -9,15 +9,17 @@ void main() {
   ModifierBase armorDivisor;
 
   setUp(() async {
-    affects = await ModifierBase.fetchByName('Affects Insubstantial');
-    affSub = await ModifierBase.fetchByName('Affects Substantial');
-    accurate = await ModifierBase.fetchByName('Accurate');
-    area = await ModifierBase.fetchByName('Area Effect');
-    armorDivisor = await ModifierBase.fetchByName('Armor Divisor');
+    await ModifierBase.readModifierData();
+
+    affects = ModifierBase.fetchByName('Affects Insubstantial');
+    affSub = ModifierBase.fetchByName('Affects Substantial');
+    accurate = ModifierBase.fetchByName('Accurate');
+    area = ModifierBase.fetchByName('Area Effect');
+    armorDivisor = ModifierBase.fetchByName('Armor Divisor');
   });
 
   group('Modifier Base', () {
-    test('read by name', () async {
+    test('read by name', () {
       expect(affects.name, equals('Affects Insubstantial'));
       expect(accurate.name, equals('Accurate'));
       expect(affSub.name, equals('Affects Substantial'));
@@ -25,7 +27,7 @@ void main() {
       expect(armorDivisor.name, equals('Armor Divisor'));
     });
 
-    test('has percentage', () async {
+    test('has percentage', () {
       expect(affects.percentage, equals(20));
       expect(accurate.percentage, equals(5));
       expect(affSub.percentage, equals(40));
@@ -158,8 +160,8 @@ void main() {
       expect(mod.typicalText, equals('Area Effect, 8 yards, +150%'));
     });
 
-    test('Armor Divisor', () async {
-      var mod = await Modifier.build('Armor Divisor');
+    test('Armor Divisor', () {
+      var mod = Modifier.build('Armor Divisor');
       expect(mod.name, equals('Armor Divisor'));
       expect(mod.typicalText, equals('Armor Divisor (2), +50%'));
 
@@ -177,8 +179,8 @@ void main() {
       }, throwsRangeError);
     });
 
-    test('Blockable', () async {
-      var mod = await Modifier.build('Blockable');
+    test('Blockable', () {
+      var mod = Modifier.build('Blockable');
       expect(mod.name, equals('Blockable'));
       expect(mod.hasLevels, isTrue);
       expect(mod.level, equals(1));
@@ -193,8 +195,8 @@ void main() {
       expect(mod.typicalText, equals('Blockable, and can be parried, -10%'));
     });
 
-    test('Cosmic', () async {
-      var mod = await Modifier.build('Cosmic');
+    test('Cosmic', () {
+      var mod = Modifier.build('Cosmic');
       expect(mod.name, equals('Cosmic'));
       expect(mod.typicalText, equals('Cosmic, Adding utility, +50%'));
       expect(mod.hasLevels, isTrue);

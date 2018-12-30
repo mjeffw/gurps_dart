@@ -79,8 +79,8 @@ class Modifier implements TraitModifier {
     return (result == 0) ? this.detail.compareTo(other.detail) : result;
   }
 
-  static Future<Modifier> build(String name) async {
-    ModifierBase base = await ModifierBase.fetchByName(name);
+  static Modifier build(String name) {
+    ModifierBase base = ModifierBase.fetchByName(name);
     return Modifier(base: base);
   }
 }
@@ -226,22 +226,21 @@ class ModifierBase {
 
   static Map<String, dynamic> _modifiers = <String, dynamic>{};
 
-  static Future<ModifierBase> fetchByName(String name) async {
-    // Read the advantage.json file int a map only once; when fetching by name,
-    // look up from the map and turn the resulting map into an object.
-    if (_modifiers.isEmpty) {
-      await readModifierData() as Map<String, dynamic>;
-    }
+  static ModifierBase fetchByName(String name) {
     ModifierBase adv =
         _$ModifierBaseFromJson(_modifiers[name] as Map<String, dynamic>);
     return adv;
   }
 
+  // Read the advantage.json file int a map only once; when fetching by name,
+  // look up from the map and turn the resulting map into an object.
   static void readModifierData() async {
-    var x = File('assets/data/modifiers.json').readAsString();
-    Map y =
-        await x.then<Map>((fileContents) => json.decode(fileContents) as Map);
-    Map<String, dynamic> z = y['modifiers'] as Map<String, dynamic>;
-    _modifiers = z;
+    if (_modifiers.isEmpty) {
+      var x = File('assets/data/modifiers.json').readAsString();
+      Map y =
+          await x.then<Map>((fileContents) => json.decode(fileContents) as Map);
+      Map<String, dynamic> z = y['modifiers'] as Map<String, dynamic>;
+      _modifiers = z;
+    }
   }
 }

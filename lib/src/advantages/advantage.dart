@@ -53,8 +53,8 @@ class Advantage {
 
   int _adjustedBaseCost() => specialization?.cost ?? base.cost;
 
-  static Future<Advantage> build(String name) async {
-    var base = await AdvantageBase.fetchByName(name);
+  static Advantage build(String name) {
+    var base = AdvantageBase.fetchByName(name);
     var adv = Advantage(base: base);
     if (base.requiresSpecialization) {
       adv.specialization = base.defaultSpecialization;
@@ -62,14 +62,14 @@ class Advantage {
     return adv;
   }
 
-  static Future<Advantage> parse(String text) async {
+  static Advantage parse(String text) {
     AbilityParser parser = AbilityParser(text);
     var name = parser.baseName;
 
     // At this point we may NOT have the real base name; we may have one that
     // includes both the name, a level, and some other description.
 
-    Advantage adv = await Advantage.build(parser.baseName);
+    Advantage adv = Advantage.build(parser.baseName);
     adv?.modifiers?.addAll(parser.modifiers);
     return adv;
   }
@@ -96,8 +96,6 @@ class AdvantageBase {
   factory AdvantageBase.fromJson(Map<String, dynamic> json) {
     return _$AdvantageBaseFromJson(json);
   }
-
-  static Map<String, dynamic> _advantages = <String, dynamic>{};
 
   @JsonKey(nullable: false, required: true)
   final String name;
@@ -141,24 +139,27 @@ class AdvantageBase {
 
   bool get isSupernatural => types.contains('Supernatural');
 
-  static Future<AdvantageBase> fetchByName(String name) async {
-    // Read the advantage.json file int a map only once; when fetching by name,
-    // look up from the map and turn the resulting map into an object.
-    if (_advantages.isEmpty) {
-      await readAdvantageData() as Map<String, dynamic>;
-    }
+  /// Ensure this is populated before using AdvantageBase.fetchByName() by
+  /// calling 'await AdvantageBase.readAdvantageData()'
+  static Map<String, dynamic> _advantages = <String, dynamic>{};
+
+  static AdvantageBase fetchByName(String name) {
     Map<String, dynamic> rawText = _advantages[name];
     return (rawText == null)
         ? null
         : _$AdvantageBaseFromJson(_advantages[name] as Map<String, dynamic>);
   }
 
+  // Read the advantage.json file int a map only once; when fetching by name,
+  // look up from the map and turn the resulting map into an object.
   static void readAdvantageData() async {
-    var x = File('assets/data/advantages.json').readAsString();
-    Map y =
-        await x.then<Map>((fileContents) => json.decode(fileContents) as Map);
-    Map<String, dynamic> z = y['advantages'] as Map<String, dynamic>;
-    _advantages = z;
+    if (_advantages.isEmpty) {
+      var x = File('assets/data/advantages.json').readAsString();
+      Map y =
+          await x.then<Map>((fileContents) => json.decode(fileContents) as Map);
+      Map<String, dynamic> z = y['advantages'] as Map<String, dynamic>;
+      _advantages = z;
+    }
   }
 }
 
