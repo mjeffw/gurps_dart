@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:gurps_dart/src/advantages/ability_parser.dart';
-import 'package:gurps_dart/src/advantages/modifier.dart';
 import 'package:gurps_dart/src/trait_modifier.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -18,7 +17,9 @@ class Advantage {
   final AdvantageBase base;
 
   int _level;
+
   final _Modifiers modifiers = _Modifiers();
+
   Specialization specialization;
 
   int get cost {
@@ -28,16 +29,6 @@ class Advantage {
     result += result * modifierCostFactor;
     return result.ceil();
   }
-
-  String get name => base.name;
-
-  String get text {
-    return [name, modifiers.detailText, '[$cost]'].join(' ') + '.';
-  }
-
-  int _adjustedBaseCost() => specialization?.cost ?? base.cost;
-
-  bool get requiresSpecialization => base.requiresSpecialization;
 
   bool get hasLevels => base.hasLevels;
 
@@ -52,6 +43,16 @@ class Advantage {
     _level = newLevel;
   }
 
+  String get name => base.name;
+
+  bool get requiresSpecialization => base.requiresSpecialization;
+
+  String get text {
+    return [name, modifiers.detailText, '[$cost]'].join(' ') + '.';
+  }
+
+  int _adjustedBaseCost() => specialization?.cost ?? base.cost;
+
   static Future<Advantage> build(String name) async {
     var base = await AdvantageBase.fetchByName(name);
     var adv = Advantage(base: base);
@@ -63,36 +64,14 @@ class Advantage {
 
   static Future<Advantage> parse(String text) async {
     AbilityParser parser = AbilityParser(text);
-    Advantage adv = await parser.advantage();
-    adv.modifiers.addAll(await parser.modifiers());
+    var name = parser.baseName;
+
+    // At this point we may NOT have the real base name; we may have one that
+    // includes both the name, a level, and some other description.
+
+    Advantage adv = await Advantage.build(parser.baseName);
+    adv?.modifiers?.addAll(parser.modifiers);
     return adv;
-  }
-}
-
-class _Modifiers extends ListBase<TraitModifier> {
-  final List<TraitModifier> l = [];
-
-  // return the canonical representation of a list of modifiers, like:
-  // '(Affects Insubstantial, +20%; Unconscious Only, -20%)'
-  String get detailText =>
-      l.length > 0 ? '(${l.map<String>((a) => a.typicalText).join('; ')})' : '';
-
-  int get netPercentage =>
-      l.length > 0 ? l.map<int>((a) => a.percent).reduce((a, b) => a + b) : 0;
-
-  @override
-  int get length => l.length;
-
-  @override
-  set length(int newLength) => l.length = newLength;
-
-  @override
-  TraitModifier operator [](int index) => l[index];
-
-  @override
-  void operator []=(int index, TraitModifier value) {
-    l[index] = value;
-    l.sort();
   }
 }
 
@@ -118,6 +97,8 @@ class AdvantageBase {
     return _$AdvantageBaseFromJson(json);
   }
 
+  static Map<String, dynamic> _advantages = <String, dynamic>{};
+
   @JsonKey(nullable: false, required: true)
   final String name;
 
@@ -142,16 +123,6 @@ class AdvantageBase {
   @JsonKey(defaultValue: null)
   final Map<String, Specialization> specializations;
 
-  Specialization get defaultSpecialization => _defaultSpecialization;
-
-  bool get hasEnhancements => !enhancements.isEmpty;
-  bool get isMental => types.contains('Mental');
-  bool get isPhysical => types.contains('Physical');
-  bool get isSocial => types.contains('Social');
-  bool get isExotic => types.contains('Exotic');
-  bool get isSupernatural => types.contains('Supernatural');
-  bool get isMundane => !isSupernatural && !isExotic;
-
   int get cost {
     if (requiresSpecialization) {
       return _defaultSpecialization.cost;
@@ -159,7 +130,16 @@ class AdvantageBase {
     return _cost;
   }
 
-  static Map<String, dynamic> _advantages = <String, dynamic>{};
+  Specialization get defaultSpecialization => _defaultSpecialization;
+  bool get hasEnhancements => !enhancements.isEmpty;
+  bool get isExotic => types.contains('Exotic');
+  bool get isMental => types.contains('Mental');
+  bool get isMundane => !isSupernatural && !isExotic;
+  bool get isPhysical => types.contains('Physical');
+
+  bool get isSocial => types.contains('Social');
+
+  bool get isSupernatural => types.contains('Supernatural');
 
   static Future<AdvantageBase> fetchByName(String name) async {
     // Read the advantage.json file int a map only once; when fetching by name,
@@ -210,6 +190,35 @@ class Specialization {
       _$SpecializationFromJson(e);
 
   final String name;
+
   final int cost;
+
   final List<String> examples;
+}
+
+class _Modifiers extends ListBase<TraitModifier> {
+  final List<TraitModifier> l = [];
+
+  // return the canonical representation of a list of modifiers, like:
+  // '(Affects Insubstantial, +20%; Unconscious Only, -20%)'
+  String get detailText =>
+      l.length > 0 ? '(${l.map<String>((a) => a.typicalText).join('; ')})' : '';
+
+  @override
+  int get length => l.length;
+
+  @override
+  set length(int newLength) => l.length = newLength;
+
+  int get netPercentage =>
+      l.length > 0 ? l.map<int>((a) => a.percent).reduce((a, b) => a + b) : 0;
+
+  @override
+  TraitModifier operator [](int index) => l[index];
+
+  @override
+  void operator []=(int index, TraitModifier value) {
+    l[index] = value;
+    l.sort();
+  }
 }

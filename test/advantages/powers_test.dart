@@ -4,20 +4,15 @@ import 'package:test/test.dart';
 
 void main() {
   test('Air Jet', () async {
-    // Innate Attack, Crushing 1d (Blockable, −5%; Cosmic, Does knockback-based
-    // damage against diffuse targets, +50%; Double Knockback, +20%; Increased
-    // 1/2D, 2×, +5%; Increased Range, 2×, +10%; Jet, +0%; No Blunt Trauma,
-    // −20%; No Wounding*, −25%; Runecasting, −30%) [6/level].
-    Advantage airjet = await Advantage.build('Innate Attack');
-    expect(airjet, isNotNull);
-    expect(airjet.hasLevels, isTrue);
-    expect(airjet.level, equals(1));
-    expect(airjet.requiresSpecialization, isTrue);
-    expect(airjet.specialization.name, equals('Crushing'));
-    expect(airjet.cost, equals(5));
+    String text = '''
+      Affliction 1 (HT; Accessibility, Only portals, −50%; Extended Duration, 
+      100×, +80%; Fixed Duration, +0%; Melee Attack, Reach C, −30%; No 
+      Signature, +20%; Nuisance Effect, Can be overcome by Lockmaster, −5%; 
+      Paralysis, Variant, +150%; Runecasting, −30%)
+    ''';
 
-    Modifier m = await Modifier.build('Blockable');
-    expect(m, isNotNull);
-    airjet.modifiers.add(m);
+    print(text);
+    Advantage adv = await Advantage.parse(text);
+    expect(adv, isNotNull);
   });
 }

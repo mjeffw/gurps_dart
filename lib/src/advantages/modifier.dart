@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:gurps_dart/src/trait_modifier.dart';
+import 'package:gurps_dart/src/util/core_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:math_expressions/math_expressions.dart';
-import 'package:gurps_dart/src/util/core_utils.dart';
-import 'package:gurps_dart/src/trait_modifier.dart';
 
 part 'modifier.g.dart';
 

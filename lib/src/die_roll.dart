@@ -2,11 +2,13 @@ import 'package:quiver/core.dart';
 
 /// Represents a DieRoll in GURPS.
 ///
-/// GURPS uses, for all die rolls, a number of 6-sided dice, modified by adding or subtracting an integer. For example,
-/// 2d equals "roll 2 six-sided dice", while 3d-1 means "roll 3 six-sided dice, subtracting 1 from the total.
+/// GURPS uses, for all die rolls, a number of 6-sided dice, modified by adding
+/// or subtracting an integer. For example, 2d equals "roll 2 six-sided dice",
+/// while 3d-1 means "roll 3 six-sided dice, subtracting 1 from the total.
 ///
-/// GURPS die rolls are usually 'normalized' such that the modifier can only be in the range of [-1 to 2], inclusive.
-/// The number of dice is increased or decreased as the modifier moves beyond that range.
+/// GURPS die rolls are usually 'normalized' such that the modifier can only be
+/// in the range of [-1 to 2], inclusive.  The number of dice is increased or
+/// decreased as the modifier moves beyond that range.
 class DieRoll {
   DieRoll(int numberOfDice, int adds)
       : this._numberOfDice = normalize(numberOfDice, adds)[0],
@@ -37,9 +39,11 @@ class DieRoll {
   final int _numberOfDice;
   final int _adds;
 
-  /// Return the equivalent add value if dice is converted to use (base)d as its base.
+  /// Return the equivalent add value if dice is converted to use (base)d as
+  /// its base.
   ///
-  /// For example, denormalize(3d+1, 1) should return 9, because 1d+9 will be normalized to 3d+1.
+  /// For example, denormalize(3d+1, 1) should return 9, because 1d+9 will be
+  /// normalized to 3d+1.
   static int denormalize(DieRoll dice, [int base = 1]) {
     int adds = 0;
     int numberOfDice = dice.numberOfDice;
@@ -60,9 +64,12 @@ class DieRoll {
     return adds;
   }
 
-  /// Converts to GURPS standard form, i.e., the adds cannot be anything other than -1, 0, +1, or +2.
+  /// Converts to GURPS standard form, i.e., the adds cannot be anything other
+  /// than -1, 0, +1, or +2.
   ///
-  /// The normalization algorithm is hard to describe, but it is clear with some examples:
+  /// The normalization algorithm is hard to describe, but it is clear with
+  /// some examples:
+  ///
   /// (N)d(-2) == (N-1)d(+2) -- 5d-2 == 4d+2
   /// (N)d(-1) == (N)d(-1)   -- 5d-1 == 5d-1
   /// (N)d(+0) == (N)d(+0)   -- 5d   == 5d

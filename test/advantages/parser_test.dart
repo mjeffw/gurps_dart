@@ -1,7 +1,5 @@
 import 'package:gurps_dart/src/advantages/advantage.dart';
 import 'package:gurps_dart/src/trait_modifier.dart';
-import 'package:gurps_dart/src/advantages/ability_parser.dart';
-
 import 'package:test/test.dart';
 
 void main() {
