@@ -90,7 +90,10 @@ class _Modifiers extends ListBase<TraitModifier> {
   TraitModifier operator [](int index) => l[index];
 
   @override
-  void operator []=(int index, TraitModifier value) => l[index] = value;
+  void operator []=(int index, TraitModifier value) {
+    l[index] = value;
+    l.sort();
+  }
 }
 
 /// AdvantageBase is the template for an Advantage. It defines the advantage

@@ -16,7 +16,7 @@ TraitModifierPredicate limitationOnly = (x) => x.percent < 0;
 /// Modifiers adjust the base cost of a trait in proportion to their effects. Enhancements increase the cost, while
 /// limitations reduce the cost. This is expressed as a percentage. For instance, a +20% enhancement would increase
 /// the point cost of an advantage by 1/5 its base cost, while a -50% limitation would reduce it by half its base cost.
-class TraitModifier {
+class TraitModifier implements Comparable<TraitModifier> {
   TraitModifier({this.name, this.detail, this.percent});
 
   /// Name of this Modifier.
@@ -32,6 +32,12 @@ class TraitModifier {
 
   String get typicalText {
     return '${name}${detail != null && detail.length > 0 ? ", ${detail}" : ""}, ${toSignedString(percent)}%';
+  }
+
+  @override
+  int compareTo(TraitModifier other) {
+    var result = this.name.compareTo(other.name);
+    return (result == 0) ? this.detail.compareTo(other.detail) : result;
   }
 }
 

@@ -73,6 +73,12 @@ class Modifier implements TraitModifier {
     return '';
   }
 
+  @override
+  int compareTo(TraitModifier other) {
+    var result = this.name.compareTo(other.name);
+    return (result == 0) ? this.detail.compareTo(other.detail) : result;
+  }
+
   static Future<Modifier> build(String name) async {
     ModifierBase base = await ModifierBase.fetchByName(name);
     return Modifier(base: base);
