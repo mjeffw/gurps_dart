@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:gurps_dart/src/util/core_utils.dart';
+import 'package:gurps_dart/src/trait_modifier.dart';
 
 part 'modifier.g.dart';
 
@@ -16,14 +17,35 @@ const blank = "''";
 /// ModifierBase in that it can have state, like a level value or other
 /// customizations. Modifier delegates most/all of its functionality to
 /// ModifierBase.
-class Modifier {
+class Modifier implements TraitModifier {
   Modifier({ModifierBase base})
       : assert(base != null),
         this._base = base;
 
   final ModifierBase _base;
 
+  @override
   String get name => _base._name;
+
+  @override
+  int get percent =>
+      (hasLevels) ? _base.percentageForLevel(level) : _base.percentage;
+
+  @override
+  String get detail => _levelText();
+
+  @override
+  String get summaryText => name;
+
+  /// Returns the description of the Modifier usable in the 'statistics' block
+  /// of a Power or Ability.
+  @override
+  String get typicalText {
+    var levelText = _levelText();
+    var percentText = toSignedString(percent);
+    return '$name$levelText, $percentText%';
+  }
+
   bool get hasLevels => _base.hasLevels;
 
   int _level;
@@ -41,18 +63,6 @@ class Modifier {
   }
 
   String specializationText;
-
-  /// Returns the description of the Modifier usable in the 'statistics' block
-  /// of a Power or Ability.
-  String get text {
-    var levelText = _levelText();
-    var percent = toSignedString(percentage);
-    return '$name$levelText, $percent%';
-  }
-
-  int get percentage {
-    return (hasLevels) ? _base.percentageForLevel(level) : _base.percentage;
-  }
 
   String _levelText() {
     if (hasLevels) {

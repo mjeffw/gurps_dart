@@ -2,7 +2,9 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:gurps_dart/src/advantages/ability_parser.dart';
 import 'package:gurps_dart/src/advantages/modifier.dart';
+import 'package:gurps_dart/src/trait_modifier.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'advantage.g.dart';
@@ -22,13 +24,16 @@ class Advantage {
   int get cost {
     int value = _adjustedBaseCost();
     double result = value.toDouble() * level;
-    var x = modifiers.getPercentageForLevel(level);
-    var y = x.toDouble() / 100.0;
-    result += result * y;
+    var modifierCostFactor = modifiers.netPercentage.toDouble() / 100.0;
+    result += result * modifierCostFactor;
     return result.ceil();
   }
 
   String get name => base.name;
+
+  String get text {
+    return [name, modifiers.detailText, '[$cost]'].join(' ') + '.';
+  }
 
   int _adjustedBaseCost() => specialization?.cost ?? base.cost;
 
@@ -37,7 +42,7 @@ class Advantage {
   bool get hasLevels => base.hasLevels;
 
   int get level {
-    if (hasLevels && _level == null) {
+    if (_level == null) {
       _level = 1;
     }
     return _level;
@@ -55,14 +60,25 @@ class Advantage {
     }
     return adv;
   }
+
+  static Future<Advantage> parse(String text) async {
+    AbilityParser parser = AbilityParser(text);
+    Advantage adv = await parser.advantage();
+    adv.modifiers.addAll(await parser.modifiers());
+    return adv;
+  }
 }
 
-class _Modifiers extends ListBase<Modifier> {
-  final List<Modifier> l = [];
+class _Modifiers extends ListBase<TraitModifier> {
+  final List<TraitModifier> l = [];
 
-  int getPercentageForLevel(int level) => l.length > 0
-      ? l.map<int>((a) => a.percentage).reduce((a, b) => a + b)
-      : 0;
+  // return the canonical representation of a list of modifiers, like:
+  // '(Affects Insubstantial, +20%; Unconscious Only, -20%)'
+  String get detailText =>
+      l.length > 0 ? '(${l.map<String>((a) => a.typicalText).join('; ')})' : '';
+
+  int get netPercentage =>
+      l.length > 0 ? l.map<int>((a) => a.percent).reduce((a, b) => a + b) : 0;
 
   @override
   int get length => l.length;
@@ -71,10 +87,10 @@ class _Modifiers extends ListBase<Modifier> {
   set length(int newLength) => l.length = newLength;
 
   @override
-  Modifier operator [](int index) => l[index];
+  TraitModifier operator [](int index) => l[index];
 
   @override
-  void operator []=(int index, Modifier value) => l[index] = value;
+  void operator []=(int index, TraitModifier value) => l[index] = value;
 }
 
 /// AdvantageBase is the template for an Advantage. It defines the advantage

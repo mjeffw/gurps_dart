@@ -54,7 +54,7 @@ class AbilityParser {
       }
 
       results.add(TraitModifier(
-          name: modifierText, level: int.parse(percentText), detail: detail));
+          name: modifierText, percent: int.parse(percentText), detail: detail));
     }
     return results;
   }

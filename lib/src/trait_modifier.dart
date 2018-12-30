@@ -5,7 +5,7 @@ import 'util/core_utils.dart';
 typedef bool TraitModifierPredicate(TraitModifier e);
 
 TraitModifierPredicate any = (x) => true;
-TraitModifierPredicate limitationOnly = (x) => x.level < 0;
+TraitModifierPredicate limitationOnly = (x) => x.percent < 0;
 
 /// Represents a single GURPS Modifier.
 ///
@@ -17,7 +17,7 @@ TraitModifierPredicate limitationOnly = (x) => x.level < 0;
 /// limitations reduce the cost. This is expressed as a percentage. For instance, a +20% enhancement would increase
 /// the point cost of an advantage by 1/5 its base cost, while a -50% limitation would reduce it by half its base cost.
 class TraitModifier {
-  TraitModifier({this.name, this.detail, this.level});
+  TraitModifier({this.name, this.detail, this.percent});
 
   /// Name of this Modifier.
   final String name;
@@ -26,12 +26,12 @@ class TraitModifier {
   final String detail;
 
   /// The value of the Modifier. This would be treated as a percentage as per B101.
-  final int level;
+  final int percent;
 
   String get summaryText => name;
 
   String get typicalText {
-    return '${name}${detail != null && detail.length > 0 ? ", ${detail}" : ""}, ${toSignedString(level)}%';
+    return '${name}${detail != null && detail.length > 0 ? ", ${detail}" : ""}, ${toSignedString(percent)}%';
   }
 }
 
@@ -47,13 +47,13 @@ class TraitModifierList extends DelegatingList<TraitModifier> {
   int adjustment(int baseValue) {
     // convert each TraitModifier into its int level value, then divide that by 100 (thus converting it to a percentage,
     // and sum them.
-    double x = this.map((i) => i.level / 100.0).fold(0.0, (a, b) => a + b);
+    double x = this.map((i) => i.percent / 100.0).fold(0.0, (a, b) => a + b);
 
     // return the sum multipled by the baseValue, truncating any fractions
     return (baseValue * x).ceil();
   }
 
-  int get sum => this.map((e) => e.level).fold(0, (a, b) => a + b);
+  int get sum => this.map((e) => e.percent).fold(0, (a, b) => a + b);
 }
 
 /// Define the TraitModifiable mixin.

@@ -115,19 +115,19 @@ void main() {
 
       expect(mod.hasLevels, isTrue);
       expect(mod.level, equals(1));
-      expect(mod.percentage, equals(5));
-      expect(mod.text, equals('Accurate +1, +5%'));
+      expect(mod.percent, equals(5));
+      expect(mod.typicalText, equals('Accurate +1, +5%'));
 
       mod.level = 2;
-      expect(mod.percentage, equals(10));
-      expect(mod.text, equals('Accurate +2, +10%'));
+      expect(mod.percent, equals(10));
+      expect(mod.typicalText, equals('Accurate +2, +10%'));
     });
 
     test('Affects Insubstantial', () {
       var mod = Modifier(base: affects);
       expect(mod.hasLevels, isFalse);
       expect(mod.level, isNull);
-      expect(mod.text, equals('Affects Insubstantial, +20%'));
+      expect(mod.typicalText, equals('Affects Insubstantial, +20%'));
 
       expect(() {
         mod.level = 2;
@@ -138,7 +138,7 @@ void main() {
       var mod = Modifier(base: affSub);
       expect(mod.hasLevels, isFalse);
       expect(mod.level, isNull);
-      expect(mod.text, equals('Affects Substantial, +40%'));
+      expect(mod.typicalText, equals('Affects Substantial, +40%'));
 
       expect(() {
         mod.level = 2;
@@ -149,28 +149,28 @@ void main() {
       var mod = Modifier(base: area);
       expect(mod.hasLevels, isTrue);
       expect(mod.level, 1);
-      expect(mod.text, equals('Area Effect, 2 yards, +50%'));
+      expect(mod.typicalText, equals('Area Effect, 2 yards, +50%'));
 
       mod.level = 2;
-      expect(mod.text, equals('Area Effect, 4 yards, +100%'));
+      expect(mod.typicalText, equals('Area Effect, 4 yards, +100%'));
 
       mod.level = 3;
-      expect(mod.text, equals('Area Effect, 8 yards, +150%'));
+      expect(mod.typicalText, equals('Area Effect, 8 yards, +150%'));
     });
 
     test('Armor Divisor', () async {
       var mod = await Modifier.build('Armor Divisor');
       expect(mod.name, equals('Armor Divisor'));
-      expect(mod.text, equals('Armor Divisor (2), +50%'));
+      expect(mod.typicalText, equals('Armor Divisor (2), +50%'));
 
       mod.level = 2;
-      expect(mod.text, equals('Armor Divisor (3), +100%'));
+      expect(mod.typicalText, equals('Armor Divisor (3), +100%'));
 
       mod.level = 3;
-      expect(mod.text, equals('Armor Divisor (5), +150%'));
+      expect(mod.typicalText, equals('Armor Divisor (5), +150%'));
 
       mod.level = 4;
-      expect(mod.text, equals('Armor Divisor (10), +200%'));
+      expect(mod.typicalText, equals('Armor Divisor (10), +200%'));
 
       expect(() {
         mod.level = 5;
@@ -182,36 +182,36 @@ void main() {
       expect(mod.name, equals('Blockable'));
       expect(mod.hasLevels, isTrue);
       expect(mod.level, equals(1));
-      expect(mod.percentage, equals(-5));
-      expect(mod.text, equals('Blockable, -5%'));
+      expect(mod.percent, equals(-5));
+      expect(mod.typicalText, equals('Blockable, -5%'));
 
       mod.level = 2;
       expect(mod.name, equals('Blockable'));
       expect(mod.level, equals(2));
-      expect(mod.percentage, equals(-10));
+      expect(mod.percent, equals(-10));
 
-      expect(mod.text, equals('Blockable, and can be parried, -10%'));
+      expect(mod.typicalText, equals('Blockable, and can be parried, -10%'));
     });
 
     test('Cosmic', () async {
       var mod = await Modifier.build('Cosmic');
       expect(mod.name, equals('Cosmic'));
-      expect(mod.text, equals('Cosmic, Adding utility, +50%'));
+      expect(mod.typicalText, equals('Cosmic, Adding utility, +50%'));
       expect(mod.hasLevels, isTrue);
       expect(mod.level, equals(1));
-      expect(mod.percentage, equals(50));
+      expect(mod.percent, equals(50));
 
       mod.level = 2;
-      expect(mod.text, equals('Cosmic, Cheating, +100%'));
+      expect(mod.typicalText, equals('Cosmic, Cheating, +100%'));
 
       mod.level = 3;
-      expect(mod.text, equals('Cosmic, Godlike tricks, +300%'));
+      expect(mod.typicalText, equals('Cosmic, Godlike tricks, +300%'));
 
       mod.level = 1;
       mod.specializationText =
           'Does knockback-based damage against diffuse targets';
       expect(
-          mod.text,
+          mod.typicalText,
           equals(
               'Cosmic, Does knockback-based damage against diffuse targets, +50%'));
     });
