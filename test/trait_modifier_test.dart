@@ -1,10 +1,10 @@
-import "package:test/test.dart";
+import 'package:test/test.dart';
 
 import '../lib/src/trait_modifier.dart';
 
 void main() {
   group('TraitModifier', () {
-    var t = TraitModifier("name", "detail", 10);
+    var t = TraitModifier(name: 'name', detail: 'detail', level: 10);
 
     test('constructor', () {
       expect(t.name, equals('name'));
@@ -19,8 +19,8 @@ void main() {
     test('has typical text', () {
       expect(t.typicalText, equals('name, detail, +10%'));
 
-      expect(
-          TraitModifier('name2', null, -25).typicalText, equals('name2, -25%'));
+      expect(TraitModifier(name: 'name2', level: -25).typicalText,
+          equals('name2, -25%'));
     });
   });
 
@@ -32,9 +32,9 @@ void main() {
       emptyList = TraitModifierList();
       filledList = TraitModifierList();
       filledList.addAll([
-        TraitModifier('a', null, -15),
-        TraitModifier('b', null, -25),
-        TraitModifier('c', null, 50)
+        TraitModifier(name: 'a', level: -15),
+        TraitModifier(name: 'b', level: -25),
+        TraitModifier(name: 'c', level: 50)
       ]);
     });
 
@@ -44,8 +44,10 @@ void main() {
     });
 
     test('sum should equal sum of all element levels', () {
-      emptyList.addAll(
-          [TraitModifier('a', null, -15), TraitModifier('b', null, -25)]);
+      emptyList.addAll([
+        TraitModifier(name: 'a', level: -15),
+        TraitModifier(name: 'b', level: -25)
+      ]);
       expect(emptyList.sum, equals(-40));
       expect(filledList.sum, equals(10));
     });
@@ -71,8 +73,8 @@ void main() {
     });
 
     test('can add TraitModifiers', () {
-      var z = TraitModifier('z', null, 25);
-      var y = TraitModifier('y', null, -12);
+      var z = TraitModifier(name: 'z', level: 25);
+      var y = TraitModifier(name: 'y', level: -12);
 
       foo.addTraitModifier(y);
       foo.addTraitModifier(z);

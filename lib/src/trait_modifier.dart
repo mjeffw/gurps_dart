@@ -17,16 +17,16 @@ TraitModifierPredicate limitationOnly = (x) => x.level < 0;
 /// limitations reduce the cost. This is expressed as a percentage. For instance, a +20% enhancement would increase
 /// the point cost of an advantage by 1/5 its base cost, while a -50% limitation would reduce it by half its base cost.
 class TraitModifier {
-  TraitModifier(this.name, this.detail, this.level);
+  TraitModifier({this.name, this.detail, this.level});
 
   /// Name of this Modifier.
-  String name;
+  final String name;
 
   /// Optional detail about the Modifier.
-  String detail;
+  final String detail;
 
   /// The value of the Modifier. This would be treated as a percentage as per B101.
-  int level;
+  final int level;
 
   String get summaryText => name;
 

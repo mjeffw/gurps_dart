@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:gurps_dart/src/advantages/modifier.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:math_expressions/math_expressions.dart';
 
 part 'advantage.g.dart';
 
@@ -28,6 +27,8 @@ class Advantage {
     result += result * y;
     return result.ceil();
   }
+
+  String get name => base.name;
 
   int _adjustedBaseCost() => specialization?.cost ?? base.cost;
 
@@ -147,9 +148,10 @@ class AdvantageBase {
     if (_advantages.isEmpty) {
       await readAdvantageData() as Map<String, dynamic>;
     }
-    AdvantageBase adv =
-        _$AdvantageBaseFromJson(_advantages[name] as Map<String, dynamic>);
-    return adv;
+    Map<String, dynamic> rawText = _advantages[name];
+    return (rawText == null)
+        ? null
+        : _$AdvantageBaseFromJson(_advantages[name] as Map<String, dynamic>);
   }
 
   static void readAdvantageData() async {
