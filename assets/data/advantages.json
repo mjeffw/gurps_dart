@@ -38,6 +38,53 @@
                 "Physical"
             ]
         },
+        "Control": {
+            "name": "Control",
+            "cost": null,
+            "hasLevels": true,
+            "requiresSpecialization": true,
+            "defaultSpecialization": "Common",
+            "specializations": {
+                "Common": {
+                    "name": "Common",
+                    "cost": 20,
+                    "examples": [
+                        "Earth",
+                        "Fire",
+                        "Gravity",
+                        "Light",
+                        "Metal",
+                        "Plastic",
+                        "Sound",
+                        "Water",
+                        "Wood"
+                    ]
+                },
+                "Occasional": {
+                    "name": "Occasional",
+                    "cost": 15,
+                    "examples": [
+                        "Ceramics",
+                        "Ferrous Metals",
+                        "Ice",
+                        "Steam",
+                        "Stone",
+                        "Infrared",
+                        "Ultrasonics"
+                    ]
+                },
+                "Small Category": {
+                    "name": "Rare",
+                    "cost": 10,
+                    "examples": [
+                        "Brick",
+                        "Iron",
+                        "Paper",
+                        "Rubber"
+                    ]
+                }
+            }
+        },
         "Create": {
             "name": "Create",
             "cost": 0,
@@ -113,6 +160,10 @@
                     "cost": 5
                 }
             }
+        },
+        "Mind Control": {
+            "name": "Mind Control",
+            "cost": 50
         }
     }
 }

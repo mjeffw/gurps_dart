@@ -5,6 +5,7 @@ import 'package:gurps_dart/src/advantages/modifier.dart';
 void main() {
   setUp(() async {
     await AdvantageBase.readAdvantageData();
+    await ModifierBase.readModifierData();
   });
 
   group('advantage base', () {
@@ -88,9 +89,9 @@ void main() {
       expect(adv.cost, equals(40));
     });
 
-    test('adding modifier', () async {
+    test('adding modifier', () {
       Advantage adv = Advantage.build('Affliction');
-      Modifier m = await Modifier.build('Accurate');
+      Modifier m = Modifier.build('Accurate');
       adv.modifiers.add(m);
 
       expect(adv.cost, equals(11));
@@ -100,13 +101,6 @@ void main() {
 
       adv.level = 4;
       expect(adv.cost, equals(48));
-    });
-
-    test('Create Acid', () {
-      Advantage createAcid = Advantage.build('Create');
-      createAcid.specialization =
-          createAcid.base.specializations['Medium Category'];
-      expect(createAcid.cost, equals(20));
     });
   });
 }

@@ -12,46 +12,64 @@ part 'advantage.g.dart';
 /// a character. It includes the AdvantageBase, potentially with a selected
 /// Enhancement, any levels, and any Modifiers applied to it.
 class Advantage {
-  Advantage({this.base});
+  Advantage({AdvantageBase base}) : this._base = base {
+    level = 1;
+    specialization = _base.defaultSpecialization;
+  }
 
-  final AdvantageBase base;
+  final AdvantageBase _base;
+  String get name => _base.name;
+  bool get hasLevels => _base.hasLevels;
 
+  /// Level should be null unless _base.hasLevels is true.
   int _level;
+  int get level => _level;
+  set level(int newLevel) {
+    if (_base.hasLevels) _level = newLevel;
+  }
 
   final _Modifiers modifiers = _Modifiers();
 
+  /// requires Specialization is true when the cost cannot be determined until
+  /// the player selects a specialization of the Advantage.
+  bool get requiresSpecialization => _base.requiresSpecialization;
   Specialization specialization;
+  String specializationText;
 
   int get cost {
     int value = _adjustedBaseCost();
-    double result = value.toDouble() * level;
+    double result =
+        (_level == null) ? value.toDouble() : value.toDouble() * level;
+
     var modifierCostFactor = modifiers.netPercentage.toDouble() / 100.0;
+
     result += result * modifierCostFactor;
     return result.ceil();
   }
 
-  bool get hasLevels => base.hasLevels;
-
-  int get level {
-    if (_level == null) {
-      _level = 1;
-    }
-    return _level;
-  }
-
-  set level(int newLevel) {
-    _level = newLevel;
-  }
-
-  String get name => base.name;
-
-  bool get requiresSpecialization => base.requiresSpecialization;
+  int _adjustedBaseCost() => specialization?.cost ?? _base.cost;
 
   String get text {
-    return [name, modifiers.detailText, '[$cost]'].join(' ') + '.';
+    var string = name + _textForSpecialization + _textForLevel;
+    return [string, modifiers.detailText, '[$cost]'].join(' ') +
+        '.'.replaceAll(r'\s+', ' ');
   }
 
-  int _adjustedBaseCost() => specialization?.cost ?? base.cost;
+  String get _textForSpecialization {
+    if (requiresSpecialization) {
+      return (specializationText == null)
+          ? ' ' + specialization?.name
+          : ' ' + specializationText;
+    }
+    return '';
+  }
+
+  String get _textForLevel {
+    if (_level == null) {
+      return '';
+    }
+    return ' $_level';
+  }
 
   static Advantage build(String name) {
     var base = AdvantageBase.fetchByName(name);
@@ -67,11 +85,48 @@ class Advantage {
     var name = parser.baseName;
 
     // At this point we may NOT have the real base name; we may have one that
-    // includes both the name, a level, and some other description.
+    // includes both the name and a level. Break the name up into a list of
+    // words, and recursively search for the name in AdvantageBase, discarding
+    // a word from the right hand side on each recursion.
+    //
+    // Example: Control Fire 2 = <Advantage> <Specialization> <Level>
+    List<String> parts = name.replaceAll(r'\s+', ' ').split(' ');
+    AdvantageBase base = findPhrase(<String>[]..addAll(parts));
+    if (base == null) {
+      return null;
+    }
 
-    Advantage adv = Advantage.build(parser.baseName);
+    Advantage adv = Advantage(base: base);
+
+    if (adv.requiresSpecialization) {
+      String remainder = name.replaceFirst(base.name, '').trim();
+      for (Specialization spec in base.specializations.values) {
+        if (spec.examples.contains(remainder)) {
+          adv.specialization = spec;
+          adv.specializationText = remainder;
+          break;
+        }
+      }
+    }
+
     adv?.modifiers?.addAll(parser.modifiers);
     return adv;
+  }
+
+  static AdvantageBase findPhrase(List<String> parts) {
+    // final recursion
+    if (parts.isEmpty) {
+      return null;
+    }
+
+    String toFind = parts.join(' ');
+    AdvantageBase base = AdvantageBase.fetchByName(toFind);
+    if (base != null) {
+      return base;
+    }
+
+    parts.removeLast();
+    return findPhrase(parts);
   }
 }
 

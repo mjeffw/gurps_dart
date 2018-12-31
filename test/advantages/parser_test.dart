@@ -3,9 +3,13 @@ import 'package:gurps_dart/src/trait_modifier.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('Insubstantial Amphibians', () async {
+  setUp(() async {
+    await AdvantageBase.readAdvantageData();
+  });
+
+  test('Insubstantial Amphibians', () {
     var text = 'Amphibious (Affects Insubstantial, +20%).';
-    Advantage adv = await Advantage.parse(text);
+    Advantage adv = Advantage.parse(text);
     expect(adv.name, equals('Amphibious'));
     expect(adv.modifiers, hasLength(equals(1)));
     expect(adv.modifiers[0].name, equals('Affects Insubstantial'));
@@ -13,9 +17,9 @@ void main() {
 
     expect(adv.text, equals('Amphibious (Affects Insubstantial, +20%) [12].'));
   });
-  test('Unconscious Amphibians', () async {
+  test('Unconscious Amphibians', () {
     var text = 'Amphibious (Unconscious Only, -20%).';
-    Advantage adv = await Advantage.parse(text);
+    Advantage adv = Advantage.parse(text);
     expect(adv.name, equals('Amphibious'));
 
     expect(adv.modifiers, hasLength(equals(1)));
@@ -24,9 +28,9 @@ void main() {
 
     expect(adv.text, equals('Amphibious (Unconscious Only, -20%) [8].'));
   });
-  test('Unconscious Amphibians with Alternate Negative Sign', () async {
+  test('Unconscious Amphibians with Alternate Negative Sign', () {
     var text = 'Amphibious (Unconscious Only, −20%).';
-    Advantage adv = await Advantage.parse(text);
+    Advantage adv = Advantage.parse(text);
     expect(adv.name, equals('Amphibious'));
 
     expect(adv.modifiers, hasLength(equals(1)));
@@ -35,9 +39,9 @@ void main() {
 
     expect(adv.text, equals('Amphibious (Unconscious Only, -20%) [8].'));
   });
-  test('Inaccessible Amphibians', () async {
+  test('Inaccessible Amphibians', () {
     var text = 'Amphibious (Accessibility, Only when eating, −20%).';
-    Advantage adv = await Advantage.parse(text);
+    Advantage adv = Advantage.parse(text);
     expect(adv.name, equals('Amphibious'));
 
     expect(adv.modifiers, hasLength(equals(1)));
@@ -48,10 +52,10 @@ void main() {
         equals('Amphibious (Accessibility, Only when eating, -20%) [8].'));
   });
 
-  test('Insubstantial Unconscious Inaccessible Amphibians', () async {
+  test('Insubstantial Unconscious Inaccessible Amphibians', () {
     var text =
         'Amphibious (Affects Insubstantial, +20%; Unconscious Only, -20%; Accessibility, Only when eating, -20%).';
-    Advantage adv = await Advantage.parse(text);
+    Advantage adv = Advantage.parse(text);
     expect(adv.name, equals('Amphibious'));
     expect(adv.cost, equals(8));
 
