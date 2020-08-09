@@ -34,9 +34,8 @@ class TraitModifier implements Comparable<TraitModifier> {
 
   String get summaryText => name;
 
-  String get typicalText {
-    return '${name}${detail != null && detail.length > 0 ? ", ${detail}" : ""}, ${toSignedString(percent)}%';
-  }
+  String get typicalText =>
+      '${name}${detail != null && detail.length > 0 ? ", ${detail}" : ""}, ${toSignedString(percent)}%';
 
   @override
   int compareTo(TraitModifier other) {

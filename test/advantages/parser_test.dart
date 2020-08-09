@@ -75,4 +75,12 @@ void main() {
         equals(
             'Amphibious (Accessibility, Only when eating, -20%; Affects Insubstantial, +20%; Unconscious Only, -20%) [8].'));
   });
+
+  test('Create', () {
+    var text =
+        'Create Water (Accessibility, Only to transform into drinkable water, −20%; Transmute Water to Water, +50%; Transmutation Only, −100%; Runecasting, -30%)';
+    Advantage adv = Advantage.parse(text);
+    expect(adv.name, equals('Create'));
+    expect(adv.cost, equals(1));
+  });
 }

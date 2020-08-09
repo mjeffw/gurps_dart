@@ -199,7 +199,7 @@ class AdvantageBase {
   static Map<String, dynamic> _advantages = <String, dynamic>{};
 
   static AdvantageBase fetchByName(String name) {
-    Map<String, dynamic> rawText = _advantages[name];
+    Map<String, dynamic> rawText = _advantages[name] as Map<String, dynamic>;
     return (rawText == null)
         ? null
         : _$AdvantageBaseFromJson(_advantages[name] as Map<String, dynamic>);
@@ -266,8 +266,11 @@ class _Modifiers extends ListBase<TraitModifier> {
   @override
   set length(int newLength) => l.length = newLength;
 
-  int get netPercentage =>
-      l.length > 0 ? l.map<int>((a) => a.percent).reduce((a, b) => a + b) : 0;
+  int get netPercentage {
+    var percent =
+        l.length > 0 ? l.map<int>((a) => a.percent).reduce((a, b) => a + b) : 0;
+    return (percent < -80) ? -80 : percent;
+  }
 
   @override
   TraitModifier operator [](int index) => l[index];
