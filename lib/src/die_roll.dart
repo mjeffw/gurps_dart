@@ -10,9 +10,10 @@ import 'package:quiver/core.dart';
 /// in the range of [-1 to 2], inclusive.  The number of dice is increased or
 /// decreased as the modifier moves beyond that range.
 class DieRoll {
-  DieRoll(int numberOfDice, int adds)
-      : this._numberOfDice = normalize(numberOfDice, adds)[0],
-        this._adds = normalize(numberOfDice, adds)[1];
+  const DieRoll(int numberOfDice, int adds)
+      : this._numberOfDice =
+            numberOfDice + (adds < 0 ? ((-adds + 2) ~/ -4) : ((adds + 1) ~/ 4)),
+        this._adds = ((adds + 1) % 4) - 1;
 
   factory DieRoll.fromString(String text) {
     final natural_number = r'\d+'; // all positive integers
@@ -81,15 +82,10 @@ class DieRoll {
   /// (N)d(+6) == (N+1)d(+2) -- 5d+6 == 6d+2
   /// (N)d(+7) == (N+2)d(-1) -- 5d+7 == 7d-1
   static List<int> normalize(int numberOfDice, int adds) {
-    if (adds > 2) {
-      return [
-        ((numberOfDice + (adds + 1) / 4).floor()),
-        (((adds + 1) % 4) - 1)
-      ];
-    } else if (adds < -1 && numberOfDice > 1) {
-      return normalize(numberOfDice - 1, adds + 4);
-    }
-    return [numberOfDice, adds];
+    int diceResult =
+        numberOfDice + adds < 0 ? ((-adds + 2) ~/ -4) : ((adds + 1) ~/ 4);
+    int addResult = ((adds + 1) % 4) - 1;
+    return [diceResult, addResult];
   }
 
   int get adds => _adds;

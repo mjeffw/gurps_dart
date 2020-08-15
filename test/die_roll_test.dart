@@ -19,10 +19,6 @@ void main() {
     expect(d.numberOfDice, equals(1));
     expect(d.adds, equals(0));
 
-    d = DieRoll(1, -2);
-    expect(d.numberOfDice, equals(1));
-    expect(d.adds, equals(-2));
-
     d = DieRoll(1, 1);
     expect(d.numberOfDice, equals(1));
     expect(d.adds, equals(1));
@@ -57,6 +53,10 @@ void main() {
 
     d = DieRoll(7, -21);
     expect(d.numberOfDice, equals(2));
+    expect(d.adds, equals(-1));
+
+    d = DieRoll(1, -1);
+    expect(d.numberOfDice, equals(1));
     expect(d.adds, equals(-1));
   });
 
@@ -141,4 +141,55 @@ void main() {
   test('has hashcode', () {
     expect(DieRoll(4, -2).hashCode, equals(DieRoll(3, 2).hashCode));
   });
+
+  test('modulo normalization -- adds', () {
+    expect(adds(-6), equals(2));
+    expect(adds(-5), equals(-1));
+    expect(adds(-4), equals(0));
+    expect(adds(-3), equals(1));
+    expect(adds(-2), equals(2));
+    expect(adds(-1), equals(-1));
+    expect(adds(0), equals(0));
+    expect(adds(1), equals(1));
+    expect(adds(2), equals(2));
+    expect(adds(3), equals(-1));
+    expect(adds(4), equals(0));
+    expect(adds(5), equals(1));
+    expect(adds(6), equals(2));
+  });
+  test('modulo normalization -- dice', () {
+    expect(dice(-6), equals(-2));
+    expect(dice(-5), equals(-1));
+    expect(dice(-4), equals(-1));
+    expect(dice(-3), equals(-1));
+    expect(dice(-2), equals(-1));
+    expect(dice(-1), equals(0));
+    expect(dice(0), equals(0));
+    expect(dice(1), equals(0));
+    expect(dice(2), equals(0));
+    expect(dice(3), equals(1));
+    expect(dice(4), equals(1));
+    expect(dice(5), equals(1));
+    expect(dice(6), equals(1));
+    expect(dice(7), equals(2));
+  });
+
+  test('modulo combo', () {
+    int d = 1;
+    int p = 0;
+
+    d += dice(p);
+    p = adds(p);
+
+    expect(d, equals(1));
+    expect(p, equals(0));
+  });
+}
+
+int adds(int adds) {
+  return ((adds + 1) % 4) - 1;
+}
+
+int dice(int adds) {
+  return adds < 0 ? ((-adds + 2) ~/ -4) : ((adds + 1) ~/ 4);
 }
