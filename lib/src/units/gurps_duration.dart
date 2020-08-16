@@ -17,6 +17,8 @@ class GurpsDuration {
 
   const GurpsDuration._seconds(this._duration);
 
+  static const GurpsDuration momentary = GurpsDuration._seconds(0);
+
   static const int secondsPerYear = Duration.secondsPerDay * 365;
   static const int secondsPerMonth = 2628000;
   static const int secondsPerWeek = Duration.secondsPerDay * 7;
