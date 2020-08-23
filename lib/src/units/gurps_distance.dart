@@ -30,4 +30,10 @@ class GurpsDistance {
 
   @override
   String toString() => toFormattedString(inYards);
+
+  @override
+  bool operator ==(Object any) => any is GurpsDistance && any._value == _value;
+
+  @override
+  int get hashCode => _value.hashCode;
 }
