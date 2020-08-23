@@ -27,4 +27,7 @@ class GurpsDistance {
   int get inYards => _value;
 
   int get inMiles => _value ~/ yardsPerMile;
+
+  @override
+  String toString() => toFormattedString(inYards);
 }
