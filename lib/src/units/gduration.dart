@@ -1,5 +1,5 @@
-class GurpsDuration {
-  const GurpsDuration(
+class GDuration {
+  const GDuration(
       {int years: 0,
       int months: 0,
       int weeks: 0,
@@ -15,9 +15,9 @@ class GurpsDuration {
             secondsPerMinute * minutes +
             seconds);
 
-  const GurpsDuration._seconds(this._duration);
+  const GDuration._seconds(this._duration);
 
-  static const GurpsDuration momentary = GurpsDuration._seconds(0);
+  static const GDuration momentary = GDuration._seconds(0);
 
   static const int secondsPerYear = Duration.secondsPerDay * 365;
   static const int secondsPerMonth = 2628000;
@@ -32,25 +32,25 @@ class GurpsDuration {
 
   int get inHours => _duration ~/ secondsPerHour;
 
-  GurpsDuration operator +(GurpsDuration other) =>
-      new GurpsDuration._seconds(_duration + other._duration);
+  GDuration operator +(GDuration other) =>
+      new GDuration._seconds(_duration + other._duration);
 
-  GurpsDuration operator -(GurpsDuration other) =>
-      new GurpsDuration._seconds(_duration - other._duration);
+  GDuration operator -(GDuration other) =>
+      new GDuration._seconds(_duration - other._duration);
 
-  GurpsDuration operator *(num other) =>
-      new GurpsDuration._seconds((_duration * other).floor());
+  GDuration operator *(num other) =>
+      new GDuration._seconds((_duration * other).floor());
 
-  GurpsDuration operator ~/(num other) =>
-      new GurpsDuration._seconds((_duration ~/ other).floor());
+  GDuration operator ~/(num other) =>
+      new GDuration._seconds((_duration ~/ other).floor());
 
-  bool operator <(GurpsDuration other) => _duration < other._duration;
+  bool operator <(GDuration other) => _duration < other._duration;
 
-  bool operator >(GurpsDuration other) => _duration > other._duration;
+  bool operator >(GDuration other) => _duration > other._duration;
 
-  bool operator <=(GurpsDuration other) => _duration <= other._duration;
+  bool operator <=(GDuration other) => _duration <= other._duration;
 
-  bool operator >=(GurpsDuration other) => _duration >= other._duration;
+  bool operator >=(GDuration other) => _duration >= other._duration;
 
   static String toFormattedString(int duration) {
     int years = duration ~/ secondsPerYear;
@@ -85,16 +85,16 @@ class GurpsDuration {
   }
 
   @override
-  String toString() => 'GurpsDuration[seconds: ${_duration}]';
+  String toString() => 'GDuration[seconds: ${_duration}]';
 
-  int compareTo(GurpsDuration other) => _duration.compareTo(other._duration);
+  int compareTo(GDuration other) => _duration.compareTo(other._duration);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) {
       return true;
     }
-    return other is GurpsDuration && other._duration == _duration;
+    return other is GDuration && other._duration == _duration;
   }
 
   @override
