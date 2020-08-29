@@ -1,6 +1,6 @@
 import '../util/core_utils.dart';
 
-class GurpsDistance {
+class GurpsDistance implements Comparable<GurpsDistance> {
   const GurpsDistance._yards(this._value);
 
   const GurpsDistance({int yards: 0, int miles: 0})
@@ -36,4 +36,12 @@ class GurpsDistance {
 
   @override
   int get hashCode => _value.hashCode;
+
+  @override
+  int compareTo(GurpsDistance other) => _value.compareTo(other._value);
+
+  bool operator >(GurpsDistance d) => this._value > d._value;
+  bool operator <(GurpsDistance d) => this._value < d._value;
+  bool operator >=(GurpsDistance d) => this._value >= d._value;
+  bool operator <=(GurpsDistance d) => this._value <= d._value;
 }
