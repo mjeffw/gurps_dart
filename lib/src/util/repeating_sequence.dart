@@ -12,11 +12,13 @@ import 'dart:math';
 /// value (ordinalToValue), or from some value to the index that represents the
 /// lowest value in the sequence that is equal to or greater than the given value (valueToOrdinal).
 class RepeatingSequenceConverter {
-  RepeatingSequenceConverter(this._pattern);
+  const RepeatingSequenceConverter(this._pattern, {int base = 10})
+      : _base = base ?? 10;
 
-  List<int> _pattern;
+  final List<int> _pattern;
+
   // this can be changed if the repetition is based on another value than 10
-  int _base = 10;
+  final int _base;
 
   // assume pattern = [10, 30], 100, 300, 1000, 3000, ...
   // if index = 5, then the result should be:
