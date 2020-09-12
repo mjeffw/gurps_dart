@@ -1,7 +1,7 @@
-class Weight {
-  const Weight._pounds(this._value);
+class GWeight {
+  const GWeight._pounds(this._value);
 
-  const Weight({int pounds: 0, int tons: 0})
+  const GWeight({int pounds: 0, int tons: 0})
       : this._pounds(poundsPerTon * tons + pounds);
 
   static const int poundsPerTon = 2000;
@@ -18,4 +18,7 @@ class Weight {
     }
     return '${pounds} lbs.';
   }
+
+  @override
+  String toString() => toFormattedString(_value);
 }
