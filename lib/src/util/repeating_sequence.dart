@@ -42,7 +42,7 @@ class RepeatingSequenceConverter {
     return _pattern.indexOf(arrayValue) + (loops * _pattern.length);
   }
 
-  int smallestTableValueGreaterThanOrEqualTo(double val) {
+  int smallestTableValueGreaterThanOrEqualTo(num val) {
     return _pattern.where((i) => i >= val).first;
   }
 
