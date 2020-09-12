@@ -21,4 +21,10 @@ class GWeight {
 
   @override
   String toString() => toFormattedString(_value);
+
+  @override
+  int get hashCode => _value.hashCode;
+
+  @override
+  bool operator ==(Object other) => other is GWeight && other._value == _value;
 }
