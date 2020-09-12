@@ -9,4 +9,7 @@ class SizeAndSpeedRangeTable {
   int sizeForLinearMeasurement(int measure) => _table.valueToOrdinal(measure);
 
   int linearMeasureForSize(int size) => _table.ordinalToValue(size);
+
+  int smallestLinearMeasureGreaterThanOrEqualTo(int measure) =>
+      _table.smallestTableValueGreaterThanOrEqualTo(measure);
 }
