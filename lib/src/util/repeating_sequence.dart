@@ -38,11 +38,11 @@ class RepeatingSequenceConverter {
 
     double val = value / pow(_base, loops); // 3 / 1 = 3
 
-    int arrayValue = _smallestTableValueGreaterThanOrEqualTo(val);
+    int arrayValue = smallestTableValueGreaterThanOrEqualTo(val);
     return _pattern.indexOf(arrayValue) + (loops * _pattern.length);
   }
 
-  int _smallestTableValueGreaterThanOrEqualTo(double val) {
+  int smallestTableValueGreaterThanOrEqualTo(double val) {
     return _pattern.where((i) => i >= val).first;
   }
 
