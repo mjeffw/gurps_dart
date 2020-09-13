@@ -25,7 +25,7 @@ class RepeatingSequenceConverter {
   // int x = index % pattern.length = 1
   // int y = floor(index / pattern.length) = 2
   // return pattern[x] * 10^y = 30 * 100 = 3000
-  int ordinalToValue(int index) {
+  int indexToValue(int index) {
     int i = (index % _pattern.length);
     int exponent = index ~/ _pattern.length;
     int other = (pow(_base, exponent).toInt());
@@ -33,18 +33,30 @@ class RepeatingSequenceConverter {
     return j;
   }
 
-  int valueToOrdinal(int value) {
+  int valueToIndex(int value) {
     int loops = _numberOfLoops(value); // 0
 
     double val = value / pow(_base, loops); // 3 / 1 = 3
 
-    int arrayValue = smallestTableValueGreaterThanOrEqualTo(val);
+    int arrayValue = _smallestTableValueGreaterThanOrEqualTo(val);
     return _pattern.indexOf(arrayValue) + (loops * _pattern.length);
   }
 
-  int smallestTableValueGreaterThanOrEqualTo(num val) {
-    return _pattern.where((i) => i >= val).first;
+  /// Return the least value from the repeating sequence greater than or equal
+  /// to the passed value.
+  int ceil(num value) {
+    if (value < 0) throw ArgumentError('must be non-negative');
+    int index = 0;
+    int temp = 0;
+    do {
+      temp = indexToValue(index++);
+    } while (temp < value);
+
+    return temp;
   }
+
+  int _smallestTableValueGreaterThanOrEqualTo(num val) =>
+      _pattern.where((i) => i >= val).first;
 
   int _numberOfLoops(int value) {
     int loops = 0;
