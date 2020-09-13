@@ -1,3 +1,5 @@
+import 'package:gurps_dart/gurps_dart.dart';
+
 import '../util/repeating_sequence.dart';
 
 class SizeAndSpeedRangeTable {
@@ -12,4 +14,10 @@ class SizeAndSpeedRangeTable {
 
   int smallestLinearMeasureGreaterThanOrEqualTo(int measure) =>
       _table.smallestTableValueGreaterThanOrEqualTo(measure);
+
+  int sizeFor(GDistance linearMeasure) =>
+      sizeForLinearMeasurement(linearMeasure.inYards);
+
+  GDistance linearMeasureFor(int size) =>
+      GDistance(yards: linearMeasureForSize(size));
 }
