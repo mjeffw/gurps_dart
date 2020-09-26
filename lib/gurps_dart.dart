@@ -1,5 +1,4 @@
 export 'src/damage_type.dart';
-export 'src/die_roll.dart';
 export 'src/trait_modifier.dart';
 export 'src/units/gdistance.dart';
 export 'src/units/gduration.dart';
