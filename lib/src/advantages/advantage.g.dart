@@ -38,8 +38,8 @@ Map<String, dynamic> _$AdvantageBaseToJson(AdvantageBase instance) =>
       'hasLevels': instance.hasLevels,
       'requiresSpecialization': instance.requiresSpecialization,
       'specializations': instance.specializations,
-      'defaultSpecialization': instance.defaultSpecialization,
-      'cost': instance.cost
+      'cost': instance.cost,
+      'defaultSpecialization': instance.defaultSpecialization
     };
 
 Enhancement _$EnhancementFromJson(Map<String, dynamic> json) {

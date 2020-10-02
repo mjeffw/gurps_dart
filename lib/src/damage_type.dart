@@ -1,5 +1,24 @@
+import 'package:meta/meta.dart';
+
 class DamageType {
-  const DamageType();
+  const DamageType({@required this.label, @required this.shortLabel});
+
+  final String label;
+  final String shortLabel;
+
+  static Map<String, DamageType> map = {
+    burning.label: burning,
+    corrosive.label: corrosive,
+    crushing.label: crushing,
+    cutting.label: cutting,
+    fatigue.label: fatigue,
+    impaling.label: impaling,
+    hugePiercing.label: hugePiercing,
+    largePiercing.label: largePiercing,
+    piercing.label: piercing,
+    smallPiercing.label: smallPiercing,
+    toxic.label: toxic,
+  };
 
   static const List<DamageType> types = [
     burning,
@@ -29,45 +48,45 @@ class DamageType {
 }
 
 class Burning extends DamageType {
-  const Burning();
+  const Burning() : super(label: 'Burning', shortLabel: 'burn');
 }
 
 class Corrosive extends DamageType {
-  const Corrosive();
+  const Corrosive() : super(label: 'Corrosive', shortLabel: 'cor');
 }
 
 class Crushing extends DamageType {
-  const Crushing();
+  const Crushing() : super(label: 'Crushing', shortLabel: 'cr');
 }
 
 class Cutting extends DamageType {
-  const Cutting();
+  const Cutting() : super(label: 'Cutting', shortLabel: 'cut');
 }
 
 class Fatigue extends DamageType {
-  const Fatigue();
+  const Fatigue() : super(label: 'Fatigue', shortLabel: 'fat');
 }
 
 class Impaling extends DamageType {
-  const Impaling();
+  const Impaling() : super(label: 'Impaling', shortLabel: 'imp');
 }
 
 class HugePiercing extends DamageType {
-  const HugePiercing();
+  const HugePiercing() : super(label: 'Huge Piercing', shortLabel: 'pi++');
 }
 
 class LargePiercing extends DamageType {
-  const LargePiercing();
+  const LargePiercing() : super(label: 'Large Piercing', shortLabel: 'pi+');
 }
 
 class Piercing extends DamageType {
-  const Piercing();
+  const Piercing() : super(label: 'Piercing', shortLabel: 'pi');
 }
 
 class SmallPiercing extends DamageType {
-  const SmallPiercing();
+  const SmallPiercing() : super(label: 'Small Piercing', shortLabel: 'pi-');
 }
 
 class Toxic extends DamageType {
-  const Toxic();
+  const Toxic() : super(label: 'Toxic', shortLabel: 'tox');
 }
