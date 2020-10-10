@@ -150,27 +150,4 @@ void main() {
     expect(GDuration(days: 366).hashCode, isNot(equals(true)));
     expect(GDuration(days: 364).hashCode, isNot(equals(true)));
   });
-
-  test('toString', () {
-    expect(GDuration(seconds: 12).toString(), equals('GDuration[seconds: 12]'));
-    expect(GDuration(minutes: 3).toString(), equals('GDuration[seconds: 180]'));
-    expect(
-        GDuration(hours: 1).toString(),
-        equals('GDuration[seconds:'
-            ' 3600]'));
-    expect(
-        GDuration(days: 2).toString(),
-        equals('GDuration[seconds: '
-            '172800]'));
-    expect(
-        GDuration(weeks: 4).toString(),
-        equals('GDuration[seconds:'
-            ' 2419200]'));
-    expect(
-        GDuration(months: 3).toString(), equals('GDuration[seconds: 7884000]'));
-    expect(
-        GDuration(years: 5).toString(),
-        equals('GDuration[seconds:'
-            ' 157680000]'));
-  });
 }

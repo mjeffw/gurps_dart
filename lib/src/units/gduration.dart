@@ -85,7 +85,7 @@ class GDuration {
   }
 
   @override
-  String toString() => 'GDuration[seconds: ${_duration}]';
+  String toString() => GDuration.toFormattedString(this._duration);
 
   int compareTo(GDuration other) => _duration.compareTo(other._duration);
 
