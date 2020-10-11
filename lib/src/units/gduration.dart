@@ -32,6 +32,8 @@ class GDuration {
 
   int get inHours => _duration ~/ secondsPerHour;
 
+  int get inDays => _duration ~/ secondsPerDay;
+
   GDuration operator +(GDuration other) =>
       new GDuration._seconds(_duration + other._duration);
 
